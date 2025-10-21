@@ -39,12 +39,13 @@ function HomepageHeader() {
                 Use this when talking to vendor sales. Systematically assess vendors
                 across six critical criteria in 10 minutes.
               </p>
-              <Link
+              <a
                 className="button button--primary button--lg"
-                to="/evaluate"
-                data-noBrokenLinkCheck>
+                href="https://vendoreval4.vercel.app"
+                target="_blank"
+                rel="noopener noreferrer">
                 Start Evaluation →
-              </Link>
+              </a>
             </div>
           </div>
         </div>

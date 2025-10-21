@@ -84,7 +84,7 @@ const config: Config = {
         {
           type: 'html',
           position: 'right',
-          value: '<a href="/evaluate" class="navbar__link">Start Evaluation</a>',
+          value: '<a href="https://vendoreval4.vercel.app" class="navbar__link" target="_blank" rel="noopener noreferrer">Start Evaluation</a>',
         },
       ],
     },
@@ -112,7 +112,7 @@ const config: Config = {
               to: '/docs/maturity-model/overview',
             },
             {
-              html: '<a href="/evaluate">Start Evaluation</a>',
+              html: '<a href="https://vendoreval4.vercel.app" target="_blank" rel="noopener noreferrer">Start Evaluation</a>',
             },
           ],
         },
