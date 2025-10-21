@@ -4,21 +4,53 @@
 
 **CRITICAL: WE HAVE TWO SEPARATE VERCEL PROJECTS, NOT ONE MONOREPO DEPLOYMENT**
 
-**Project 1: Documentation Site**
-- Vercel Project: [NAME NEEDED]
-- Root Directory: `apps/docs`
-- Build Command: `npm run build`
-- Output Directory: `build`
-- URL: https://vendor.feedforward.ai/
+### Architecture Overview
 
-**Project 2: Evaluation Tool**
-- Vercel Project: [NAME NEEDED]
-- Root Directory: `apps/evaluation-tool`
-- Build Command: `npm run build`
-- Output Directory: `dist`
-- URL: https://vendor.feedforward.ai/evaluate (or separate domain)
+**Same GitHub Repo → Two Vercel Projects → Different Root Directories**
 
-**Current Status**: Vercel projects need Root Directory configured in dashboard settings.
+```
+GitHub: adamjdavidson/vendoreval4
+    │
+    ├─► Vercel Project 1: Docs
+    │   └─► Root Directory: apps/docs
+    │
+    └─► Vercel Project 2: Tool
+        └─► Root Directory: apps/evaluation-tool
+```
+
+### Project 1: Documentation Site
+
+- **Vercel Project Name**: [TBD - check dashboard]
+- **Root Directory**: `apps/docs` ⚠️ MUST BE SET IN DASHBOARD
+- **Framework**: Docusaurus (auto-detect)
+- **Build Command**: `npm run build`
+- **Output Directory**: `build`
+- **Target URL**: https://vendor.feedforward.ai/
+
+### Project 2: Evaluation Tool
+
+- **Vercel Project Name**: [TBD - check dashboard]
+- **Root Directory**: `apps/evaluation-tool` ⚠️ MUST BE SET IN DASHBOARD
+- **Framework**: Vite (auto-detect)
+- **Build Command**: `npm run build`
+- **Output Directory**: `dist`
+- **Environment Variables**: `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`
+- **Target URL**: https://tool.vendor.feedforward.ai/ (or subdomain)
+
+### Current Status
+
+**Blockers**:
+- ⚠️ Root Directory NOT configured in Vercel Dashboard (causing build failures)
+- ⚠️ Environment variables NOT set for evaluation-tool project
+
+**Action Required**:
+1. Set Root Directory in Vercel Dashboard for BOTH projects
+2. Set environment variables for evaluation-tool project
+3. Trigger new deployments
+
+**See**: [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md) for complete step-by-step instructions
+
+**Beads Tasks Created**: vendoreval3-554 through vendoreval3-562
 
 ---
 
