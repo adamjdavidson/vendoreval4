@@ -3,6 +3,7 @@ import { createContext, useEffect, useState } from 'react';
 import type { ReactNode } from 'react';
 import type { Session, User } from '@supabase/supabase-js';
 import { authService } from '../services/auth';
+import { APP_CONFIG } from '../config/app.config';
 
 interface AuthContextType {
   user: User | null;
@@ -27,14 +28,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // In development mode OR test mode, create a test user automatically
-    // Test mode allows anonymous evaluations without authentication
-    const isTestMode = import.meta.env.DEV || import.meta.env.VITE_TEST_MODE === 'true';
-
-    if (isTestMode) {
+    // Check if test mode is enabled
+    if (APP_CONFIG.ENABLE_TEST_MODE) {
+      // Test mode: Set anonymous user for alpha testing
       const anonymousUser = {
-        id: '00000000-0000-0000-0000-000000000001', // Valid UUID for anonymous user
-        email: 'anonymous@vendoreval.app',
+        id: APP_CONFIG.ANONYMOUS_USER.id,
+        email: APP_CONFIG.ANONYMOUS_USER.email,
         app_metadata: {},
         user_metadata: {},
         aud: 'authenticated',
@@ -46,6 +45,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       return;
     }
 
+    // Production mode: Use real Supabase authentication
     // Get initial session
     authService.getSession().then((session) => {
       setSession(session);
