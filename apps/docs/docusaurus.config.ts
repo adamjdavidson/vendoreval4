@@ -15,14 +15,14 @@ const config: Config = {
   },
 
   // Set the production url of your site here
-  url: 'https://vendoreval.example.com',
+  url: 'https://vendoreval-docs.vercel.app',
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: '/',
 
   // GitHub pages deployment config.
-  organizationName: 'vendoreval',
-  projectName: 'vendoreval3',
+  organizationName: 'adamjdavidson',
+  projectName: 'vendoreval4',
 
   onBrokenLinks: 'throw',
 
@@ -77,7 +77,7 @@ const config: Config = {
         //   label: 'Vendor Examples',
         // },
         {
-          href: 'http://localhost:5174',
+          href: 'https://vendoreval3.vercel.app',
           label: 'Start Evaluation',
           position: 'right',
         },
@@ -108,7 +108,7 @@ const config: Config = {
             },
             {
               label: 'Start Evaluation',
-              href: 'http://localhost:5174',
+              href: 'https://vendoreval3.vercel.app',
             },
           ],
         },

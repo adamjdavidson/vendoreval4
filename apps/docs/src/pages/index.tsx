@@ -15,7 +15,7 @@ function HomepageHeader() {
         <div className={styles.buttons}>
           <Link
             className="button button--secondary button--lg"
-            to="http://localhost:5174">
+            to="https://vendoreval3.vercel.app">
             Start Evaluation →
           </Link>
           <Link
@@ -148,7 +148,7 @@ export default function Home(): JSX.Element {
             <div className="text--center margin-top--lg">
               <Link
                 className="button button--primary button--lg"
-                to="http://localhost:5174">
+                to="https://vendoreval3.vercel.app">
                 Start Your First Evaluation
               </Link>
             </div>
@@ -271,7 +271,7 @@ export default function Home(): JSX.Element {
                 </p>
                 <Link
                   className="button button--primary button--lg"
-                  to="http://localhost:5174">
+                  to="https://vendoreval3.vercel.app">
                   Start Evaluation Tool
                 </Link>
               </div>
