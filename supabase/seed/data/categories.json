@@ -1,0 +1,56 @@
+[
+  {
+    "key": "see",
+    "order_index": 1,
+    "color": "#DFF7FF",
+    "title_no_bs": "👁️ SEE: What you're actually buying",
+    "title_corporate": "👁️ SEE: Product Transparency",
+    "subtitle_no_bs": "Can you actually see how the AI works, or is it magic?",
+    "subtitle_corporate": "Understanding the underlying technology and capabilities"
+  },
+  {
+    "key": "change",
+    "order_index": 2,
+    "color": "#DFFEF1",
+    "title_no_bs": "✏️ CHANGE: Will they screw you over later?",
+    "title_corporate": "✏️ CHANGE: Vendor Control and Flexibility",
+    "subtitle_no_bs": "How locked in are you? Can they change things without asking?",
+    "subtitle_corporate": "Assessing vendor lock-in and control over the platform"
+  },
+  {
+    "key": "use",
+    "order_index": 3,
+    "color": "#FFF4E0",
+    "title_no_bs": "⚡ USE: Is it actually useful?",
+    "title_corporate": "⚡ USE: Practical Value Assessment",
+    "subtitle_no_bs": "Does it work well enough that people will actually use it?",
+    "subtitle_corporate": "Evaluating real-world utility and user adoption potential"
+  },
+  {
+    "key": "adapt",
+    "order_index": 4,
+    "color": "#F6EBFF",
+    "title_no_bs": "📈 ADAPT: Can you make it yours?",
+    "title_corporate": "📈 ADAPT: Customization Capabilities",
+    "subtitle_no_bs": "Can you bend it to fit your needs, or are you stuck with their way?",
+    "subtitle_corporate": "Assessing flexibility and integration options"
+  },
+  {
+    "key": "leave",
+    "order_index": 5,
+    "color": "#FFE6EA",
+    "title_no_bs": "🚪 LEAVE: Can you escape if needed?",
+    "title_corporate": "🚪 LEAVE: Exit Strategy and Data Portability",
+    "subtitle_no_bs": "If this goes bad, can you get your data out and move on?",
+    "subtitle_corporate": "Understanding migration paths and vendor independence"
+  },
+  {
+    "key": "learn",
+    "order_index": 6,
+    "color": "#E6F9E6",
+    "title_no_bs": "📚 LEARN: Will your team actually get better?",
+    "title_corporate": "📚 LEARN: Organizational Learning and Development",
+    "subtitle_no_bs": "Does using this make your people smarter, or just more dependent?",
+    "subtitle_corporate": "Evaluating skill development and knowledge transfer"
+  }
+]

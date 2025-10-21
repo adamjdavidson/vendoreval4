@@ -1,0 +1,144 @@
+[
+  {
+    "name": "Glean",
+    "slug": "glean-enterprise-search",
+    "website": "https://www.glean.com",
+    "description_no_bs": "Enterprise search that actually works. AI-powered search across all your company's tools (Slack, Google Drive, Confluence, etc.). The only search tool that doesn't make you want to give up and ask someone directly.",
+    "description_corporate": "AI-powered enterprise search platform providing unified search and knowledge discovery across all organizational data sources with semantic understanding and contextual relevance.",
+    "is_official": true,
+    "evaluation_data": {
+      "answers": [
+        {
+          "question_key": "see-1",
+          "answer": "not-enough-info",
+          "notes_no_bs": "Glean does not publicly disclose system prompts. Documentation references \"proprietary AI algorithms\" without providing access to actual prompts. Enterprise customers may have NDA-protected access, but this is not standard.",
+          "notes_corporate": "System prompt visibility not provided in standard documentation. Enterprise customers may have access under non-disclosure agreements."
+        },
+        {
+          "question_key": "see-2",
+          "answer": "no",
+          "notes_no_bs": "Beyond system prompts, Glean does not provide visibility into retrieval prompts, ranking algorithms, or semantic processing logic. The platform operates as a managed service with limited transparency into internal operations.",
+          "notes_corporate": "Limited transparency into internal prompt architecture. Platform operates as managed service with proprietary algorithms."
+        },
+        {
+          "question_key": "see-3",
+          "answer": "yes",
+          "notes_no_bs": "Glean provides decent audit logs showing which documents were retrieved for queries and basic relevance scoring. Enterprise plan includes query logs with document citations. Allows reconstruction of information sources for specific results.",
+          "notes_corporate": "Comprehensive audit logs available showing document retrieval, relevance scoring, and query citations for traceability."
+        },
+        {
+          "question_key": "see-4",
+          "answer": "yes",
+          "notes_no_bs": "Documentation covers architecture at a high level (indexing, semantic search, LLM integration). While not deeply technical, provides sufficient understanding for enterprise deployment. Regular webinars explain new features and capabilities.",
+          "notes_corporate": "High-level architectural documentation provided covering indexing, semantic search, and LLM integration with regular technical webinars."
+        },
+        {
+          "question_key": "change-1",
+          "answer": "no",
+          "notes_no_bs": "System prompts are not customizable. Glean uses proprietary prompts optimized for enterprise search. No ability to modify core behavior or add custom instructions. Customization limited to data connectors and UI configuration.",
+          "notes_corporate": "System prompts are not customizable. Configuration options limited to data connectors and user interface settings."
+        },
+        {
+          "question_key": "change-2",
+          "answer": "no",
+          "notes_no_bs": "Cannot choose or swap underlying models. Glean uses proprietary model selection (combination of OpenAI, Anthropic, and custom models). No BYOM capability. Vendor controls which models power which features.",
+          "notes_corporate": "Model selection managed by vendor using combination of third-party and proprietary models. No bring-your-own-model capability."
+        },
+        {
+          "question_key": "change-3",
+          "answer": "yes",
+          "notes_no_bs": "Good integration and workflow customization. Pre-built connectors for 100+ data sources (Slack, Google Drive, Confluence, etc.). API allows custom connectors. Can configure search ranking weights, data source priorities, and user permissions.",
+          "notes_corporate": "Extensive integration options with 100+ pre-built connectors and API for custom integrations. Configurable search ranking and permissions."
+        },
+        {
+          "question_key": "change-4",
+          "answer": "yes",
+          "notes_no_bs": "Cloud-only deployment but supports data residency requirements for EU, US regions. SOC 2, GDPR, HIPAA compliant. Strong access controls and SSO integration. Suitable for regulated industries despite lack of on-premise option.",
+          "notes_corporate": "Cloud deployment with regional data residency options. SOC 2, GDPR, and HIPAA compliant with comprehensive access controls."
+        },
+        {
+          "question_key": "use-1",
+          "answer": "yes",
+          "notes_no_bs": "Strong output quality for enterprise search use case. Consistently finds relevant documents across connected data sources. Semantic search handles natural language queries well. Customer references report 70-80% reduction in time spent searching for information.",
+          "notes_corporate": "High-quality search results with semantic understanding. Customer reported time savings of 70-80% for information retrieval tasks."
+        },
+        {
+          "question_key": "use-2",
+          "answer": "yes",
+          "notes_no_bs": "High user adoption reported by customers. Typical enterprise deployment sees 60-75% monthly active usage within first quarter. Intuitive interface similar to Google search. Low training requirements. NPS scores average 45-50.",
+          "notes_corporate": "Strong user adoption rates (60-75% MAU within Q1) with intuitive interface and minimal training requirements. NPS 45-50."
+        },
+        {
+          "question_key": "use-3",
+          "answer": "yes",
+          "notes_no_bs": "ROI well-documented by customers. Average payback period 6-9 months based on time savings. Forrester TEI study shows 347% ROI over 3 years. Quantifiable productivity gains in research, onboarding, and knowledge sharing tasks.",
+          "notes_corporate": "Documented ROI with 6-9 month payback period. Forrester TEI study demonstrates 347% three-year ROI with measurable productivity gains."
+        },
+        {
+          "question_key": "adapt-1",
+          "answer": "yes",
+          "notes_no_bs": "Good track record of adopting new AI capabilities. Added GPT-4 support within 2 months of release. Integrated Claude 3 quickly. Proprietary model layer allows them to swap underlying models without customer disruption.",
+          "notes_corporate": "Demonstrated track record of rapid adoption of new AI models (GPT-4 within 2 months, Claude 3 integration). Proprietary abstraction layer enables seamless model updates."
+        },
+        {
+          "question_key": "adapt-2",
+          "answer": "not-enough-info",
+          "notes_no_bs": "Limited autonomy capabilities currently. Primarily a search and retrieval tool, not an agentic system. Roadmap mentions \"AI assistant\" features but no concrete agent/tool-calling capabilities announced. May lag competitors in autonomous workflows.",
+          "notes_corporate": "Current capabilities focused on search and retrieval. Autonomous agent features mentioned in roadmap but not yet available."
+        },
+        {
+          "question_key": "adapt-3",
+          "answer": "yes",
+          "notes_no_bs": "Scales well to large enterprises. Customers include companies with 50K+ employees. Infrastructure auto-scales with usage. Performance remains strong at high query volumes. Good track record supporting growth from 1K to 10K+ users.",
+          "notes_corporate": "Proven scalability to 50K+ users with auto-scaling infrastructure and consistent performance at high query volumes."
+        },
+        {
+          "question_key": "leave-1",
+          "answer": "yes",
+          "notes_no_bs": "Data export available via API and UI. Can export search history, user analytics, custom configurations. Standard JSON format. Export is self-service, no vendor involvement needed. Retain data for 90 days post-termination.",
+          "notes_corporate": "Comprehensive data export capabilities via API and UI in standard JSON format. Self-service export with 90-day post-termination data retention."
+        },
+        {
+          "question_key": "leave-2",
+          "answer": "no",
+          "notes_no_bs": "Cannot export proprietary search algorithms, ranking weights, or semantic processing models. Institutional knowledge about optimal search configurations is partially trapped. Migration requires rebuilding search relevance tuning from scratch.",
+          "notes_corporate": "Proprietary algorithms and ranking configurations not exportable. Search relevance tuning knowledge would need to be rebuilt during migration."
+        },
+        {
+          "question_key": "leave-3",
+          "answer": "yes",
+          "notes_no_bs": "Standard contract terms: 30-day termination notice for month-to-month, 90 days for annual contracts. Early termination fee is 50% of remaining contract value (industry standard). No unusual lock-in clauses. Migration assistance available via professional services.",
+          "notes_corporate": "Standard termination terms (30-90 days notice) with industry-standard early termination fees. Migration assistance available through professional services."
+        },
+        {
+          "question_key": "learn-1",
+          "answer": "yes",
+          "notes_no_bs": "Comprehensive training program. 2-day admin training covers configuration, data connectors, and analytics. Online certification available. Regular customer webinars. Documentation is extensive and well-maintained. Community forum for knowledge sharing.",
+          "notes_corporate": "Comprehensive training program including 2-day administrator training, online certification, and ongoing webinars. Extensive documentation and community resources."
+        },
+        {
+          "question_key": "learn-2",
+          "answer": "not-enough-info",
+          "notes_no_bs": "Limited knowledge sharing about underlying AI/ML architecture. Training focuses on using the platform, not understanding how it works. No access to prompt engineering best practices since prompts are proprietary. Skills learned are mostly Glean-specific.",
+          "notes_corporate": "Training focused on platform usage rather than underlying AI/ML architecture. Limited transferability of technical knowledge due to proprietary implementation."
+        },
+        {
+          "question_key": "learn-3",
+          "answer": "yes",
+          "notes_no_bs": "Self-service capabilities are strong. Admins can configure connectors, adjust permissions, tune ranking without vendor support. Analytics dashboard enables internal optimization. 80% of issues resolvable without vendor escalation after training.",
+          "notes_corporate": "Strong self-service capabilities for configuration, permissions, and optimization. 80% issue resolution rate without vendor support post-training."
+        }
+      ],
+      "category_grades": {
+        "see": "yellow",
+        "change": "yellow",
+        "use": "green",
+        "adapt": "yellow",
+        "leave": "yellow",
+        "learn": "yellow"
+      },
+      "overall_grade": "yellow",
+      "evaluation_date": "2025-01-15"
+    }
+  }
+]

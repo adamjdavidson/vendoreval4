@@ -1,0 +1,202 @@
+[
+  {
+    "key": "see-1",
+    "category_key": "see",
+    "order_index": 1,
+    "text_no_bs": "Can you see system prompts?",
+    "text_corporate": "Can you see system prompts?",
+    "is_critical": true,
+    "help_text_no_bs": "System prompts are where the core intelligence and behavior of AI tools live. If you can't see them, you're buying a black box - the vendor can change behavior without your knowledge or consent.\n\nGOOD: The vendor shows you actual system prompts, explains their design rationale, and lets you review them. Best vendors version-control prompts and notify you of changes.\n\nBAD: \"Our prompts are proprietary IP.\" This usually means either: (a) the prompts are embarrassingly simple and they're overcharging you, or (b) they're optimized for impressive output rather than accuracy.\n\nASK: Can you show me the actual system prompts? Can our compliance team audit them? How do you notify us when prompts change?",
+    "help_text_corporate": "System prompts establish the fundamental operating parameters and decision-making framework for AI tools. Visibility enables proper governance, quality assurance, and compliance verification.\n\nGOOD: Vendors provide comprehensive documentation of system prompts, including design principles and version control. Organizations receive notifications of modifications.\n\nBAD: Vendors claim prompts constitute proprietary intellectual property and withhold access. This opacity prevents due diligence regarding quality assurance and bias detection.\n\nASK: Can you provide documentation of your system prompts for our review? What processes exist for prompt governance and change notification?"
+  },
+  {
+    "key": "see-2",
+    "category_key": "see",
+    "order_index": 2,
+    "text_no_bs": "Can you see all other prompts?",
+    "text_corporate": "Can you see all other prompts?",
+    "is_critical": false,
+    "help_text_no_bs": "AI tools use function-specific prompts, routing prompts, evaluation prompts. If these are hidden, you can't debug problems. Hidden prompts often contain logic about when to cut corners or degrade quality to save costs.\n\nGOOD: Complete prompt transparency across all functions. You can see prompts for summarization, analysis, routing decisions, quality checks. Vendor documents their prompt architecture.\n\nBAD: \"You can see the main prompt but our routing logic is proprietary.\" They're hiding cost-optimization decisions - when they route to cheaper models or reduce context windows.\n\nASK: Beyond system prompts, what other prompts does the tool use? Can we see all of them? Are there any prompts we can't access?",
+    "help_text_corporate": "Complete visibility across all prompt types ensures organizations can understand system behavior comprehensively and maintain quality standards throughout the tool.\n\nGOOD: Vendors document entire prompt architecture including function-specific, routing, and evaluation prompts with clear explanations of their interactions.\n\nBAD: Vendors provide access to primary prompts while restricting visibility into operational prompts that govern critical decision-making processes.\n\nASK: Can you provide documentation of all prompts used across your system? What governance processes ensure prompt quality and transparency?"
+  },
+  {
+    "key": "see-3",
+    "category_key": "see",
+    "order_index": 3,
+    "text_no_bs": "Can you see which models are used?",
+    "text_corporate": "Can you see which models are used?",
+    "is_critical": true,
+    "help_text_no_bs": "Different models have different capabilities, costs, and failure modes. If the vendor won't tell you which models they use, they're probably using cheaper models than you'd choose yourself and pocketing the difference.\n\nGOOD: Vendor tells you exactly which models (GPT-4, Claude 3.5, etc.) they use for each function. They explain why they chose those models and give you visibility into when/how they might change.\n\nBAD: \"We use various industry-leading models.\" This is vendor-speak for \"we use whatever's cheapest this month and we don't want you auditing our margins.\"\n\nASK: Which specific models do you use? Do you always use the same model or does it vary? Can you show us your model routing logic?",
+    "help_text_corporate": "Model selection directly impacts performance characteristics, cost structure, and risk profile. Transparency enables informed assessment of vendor capabilities and value proposition.\n\nGOOD: Vendors specify exact models used for each function with clear rationale for selection and documentation of any model routing or variation logic.\n\nBAD: Vendors provide only general descriptions of their model strategy without specific model identifications or routing transparency.\n\nASK: Can you specify which models you use and under what circumstances? What processes govern model selection and updates?"
+  },
+  {
+    "key": "see-4",
+    "category_key": "see",
+    "order_index": 4,
+    "text_no_bs": "Can you see how context/retrieval works?",
+    "text_corporate": "Can you see how context/retrieval works?",
+    "is_critical": false,
+    "help_text_no_bs": "Retrieval is where most AI tools fail in practice. Bad retrieval = wrong context = garbage output, no matter how good the model. If they hide their retrieval logic, they know it sucks.\n\nGOOD: Vendor shows you their retrieval pipeline: how they chunk documents, what embeddings they use, how they rank results, how they handle context limits. You can debug retrieval failures.\n\nBAD: \"Our proprietary semantic search uses advanced AI.\" Translation: basic embeddings + cosine similarity they copied from a tutorial, and it often returns irrelevant results.\n\nASK: Can you show us how your retrieval system works? Can we see which documents/chunks were retrieved for a given query? Can we tune retrieval parameters?",
+    "help_text_corporate": "Retrieval mechanisms determine the quality and relevance of information provided to models. Visibility into retrieval processes enables optimization and troubleshooting.\n\nGOOD: Vendors document complete retrieval pipeline including chunking strategies, embedding approaches, ranking mechanisms, and context management with debugging capabilities.\n\nBAD: Vendors describe retrieval systems in general terms without providing visibility into actual implementation details or debugging capabilities.\n\nASK: Can you document your retrieval architecture? What tools exist for monitoring and optimizing retrieval quality?"
+  },
+  {
+    "key": "change-1",
+    "category_key": "change",
+    "order_index": 5,
+    "text_no_bs": "Can you edit the system prompt?",
+    "text_corporate": "Can you edit the system prompt?",
+    "is_critical": true,
+    "help_text_no_bs": "If you can't edit the system prompt, you're locked into the vendor's decisions about how the AI behaves. Your business needs are unique - generic prompts will always be suboptimal for your specific context.\n\nGOOD: You have full access to edit system prompts. The UI makes it easy to test changes. The vendor provides good defaults but encourages customization. Version history lets you roll back.\n\nBAD: \"Our prompts are carefully optimized, we don't recommend changing them.\" They want you dependent on their prompts so you can't leave. Or their system can't handle custom prompts.\n\nASK: Can we edit system prompts? Is there version control? Can we A/B test prompt changes? Are there any restrictions on what we can modify?",
+    "help_text_corporate": "Organizations require the ability to customize system prompts to align AI behavior with specific business requirements, compliance needs, and operational contexts.\n\nGOOD: Platforms provide comprehensive prompt editing capabilities with version control, testing environments, and rollback mechanisms to support iterative optimization.\n\nBAD: Vendors restrict prompt modification citing optimization or system stability concerns, limiting organizational ability to customize for specific requirements.\n\nASK: What capabilities exist for system prompt customization? How are changes tested, versioned, and deployed?"
+  },
+  {
+    "key": "change-2",
+    "category_key": "change",
+    "order_index": 6,
+    "text_no_bs": "Can you edit all prompts?",
+    "text_corporate": "Can you edit all prompts?",
+    "is_critical": false,
+    "help_text_no_bs": "Same as system prompts - if you can only edit some prompts, the vendor controls key behavior. You need to control ALL the prompts to truly customize the tool for your needs.\n\nGOOD: Every prompt is editable. Clear UI shows you all prompts and lets you modify them. Good documentation explains what each prompt does and when to customize it.\n\nBAD: \"You can customize the main prompt, but internal prompts must stay as-is for system stability.\" This means their system is brittle and poorly architected.\n\nASK: Can we edit all prompts or just some? If only some, why are others locked? How hard is it to change prompts in production?",
+    "help_text_corporate": "Comprehensive prompt editing capabilities enable organizations to optimize all aspects of AI behavior for their specific operational requirements.\n\nGOOD: All prompts are accessible for editing with clear documentation of their functions and appropriate change management processes.\n\nBAD: Only selected prompts are editable while others remain locked, limiting organizational ability to fully customize system behavior.\n\nASK: Which prompts can be customized? What is the rationale for any editing restrictions?"
+  },
+  {
+    "key": "change-3",
+    "category_key": "change",
+    "order_index": 7,
+    "text_no_bs": "Can you select which models are used?",
+    "text_corporate": "Can you select which models are used?",
+    "is_critical": false,
+    "help_text_no_bs": "Different tasks need different models. Summarization can use cheaper models; deep analysis needs expensive ones. If you can't choose models, you're probably overpaying for simple tasks or getting cheap models for complex ones.\n\nGOOD: You can specify models per task or per workflow. Clear cost/performance trade-offs shown. Easy to experiment with different models. Usage analytics show which models you're actually using.\n\nBAD: \"We automatically use the best model for each task.\" They're choosing based on their margins, not your needs. You have no control and no visibility into costs.\n\nASK: Can we choose which models to use? Can we set different models for different tasks? Can we see model-level usage and costs?",
+    "help_text_corporate": "Model selection flexibility enables organizations to optimize the cost-performance trade-off for different use cases and tasks.\n\nGOOD: Platforms allow model selection at task or workflow level with clear cost and performance implications and usage analytics.\n\nBAD: Vendors control model selection without providing transparency into decision logic or allowing organizational input.\n\nASK: What flexibility exists for model selection? How are cost and performance trade-offs communicated?"
+  },
+  {
+    "key": "change-4",
+    "category_key": "change",
+    "order_index": 8,
+    "text_no_bs": "Can you control/influence context?",
+    "text_corporate": "Can you control/influence context?",
+    "is_critical": false,
+    "help_text_no_bs": "Context is everything in AI. Can you control what documents are retrieved? What history is included? What gets prioritized? If not, the AI might use irrelevant context and you can't fix it.\n\nGOOD: You can specify context sources, set retrieval parameters, filter what gets included, see what context was used for each response. You can tune context for accuracy vs. cost.\n\nBAD: \"Our AI automatically determines optimal context.\" You can't see what context is being used or fix it when it's wrong. Black box retrieval that you can't debug.\n\nASK: Can we control what context is retrieved? Can we see what context was used? Can we set retrieval parameters? Can we exclude certain sources?",
+    "help_text_corporate": "Context control enables organizations to optimize information retrieval, ensure relevant knowledge is prioritized, and maintain appropriate boundaries around information sources.\n\nGOOD: Systems provide granular context controls including source specification, retrieval parameters, filtering capabilities, and context visibility for debugging.\n\nBAD: Systems use automated context selection without providing visibility or control over retrieval logic and context composition.\n\nASK: What controls exist for context management? How can we monitor and optimize context retrieval?"
+  },
+  {
+    "key": "use-1",
+    "category_key": "use",
+    "order_index": 9,
+    "text_no_bs": "When you test real output for your use case, does it improve or at least match your current work processes?",
+    "text_corporate": "When you test real output for your use case, does it improve or at least match your current work processes?",
+    "is_critical": true,
+    "help_text_no_bs": "Demos are theater. The only thing that matters is: does this tool actually improve your real work? If it doesn't beat your current process, it's a waste of money no matter how impressive the demo was.\n\nGOOD: You tested it on real tasks with real data. It measurably improves quality or speed. Your team actually wants to use it. It handles edge cases and messy reality, not just cherry-picked examples.\n\nBAD: Impressive demo, but when you test on your data it fails basic cases. Or it works but is slower than your current process. Or the output is generic and needs heavy editing.\n\nASK: Can we test this on our actual data before buying? Can we run a real pilot with our team? What's your refund policy if it doesn't work for our use case?",
+    "help_text_corporate": "Actual performance on organizational use cases and data represents the only valid measure of tool value. Demonstration scenarios may not reflect real-world requirements.\n\nGOOD: Organizations conduct thorough testing with representative data and use cases, measuring performance improvements against current processes with user feedback.\n\nBAD: Tools perform well in demonstrations but fail to deliver improvements when applied to actual organizational workflows and data.\n\nASK: What evaluation processes exist for testing on our data? What performance commitments can you provide?"
+  },
+  {
+    "key": "use-2",
+    "category_key": "use",
+    "order_index": 10,
+    "text_no_bs": "Is the output appropriate for your business context? (format, tone, length, analysis level)",
+    "text_corporate": "Is the output appropriate for your business context? (format, tone, length, analysis level)",
+    "is_critical": false,
+    "help_text_no_bs": "AI that sounds like a chatbot or uses wrong formats is useless regardless of accuracy. If outputs need heavy editing to match your company's standards, you're not saving time.\n\nGOOD: Output matches your house style, uses appropriate terminology, fits your document formats. Minimal editing needed. Stakeholders can't tell it's AI-generated (in a good way).\n\nBAD: Output is too casual/formal, wrong length, uses generic language, or needs reformatting. Obvious it's AI. Requires editing that negates any time savings.\n\nASK: Can the output style be customized to our standards? Can you show examples that match our typical document formats? Can we set tone and length parameters?",
+    "help_text_corporate": "Output must align with organizational communication standards, formatting requirements, and professional expectations to be actionable without extensive revision.\n\nGOOD: Tools allow customization of style, tone, format, and length to match organizational standards with minimal post-generation editing required.\n\nBAD: Output requires substantial editing to meet organizational standards, reducing efficiency gains and requiring additional quality assurance steps.\n\nASK: How can output be customized to match our organizational standards? What flexibility exists for format and style?"
+  },
+  {
+    "key": "use-3",
+    "category_key": "use",
+    "order_index": 11,
+    "text_no_bs": "Does it admit uncertainty and limitations rather than confidently asserting things it's uncertain about?",
+    "text_corporate": "Does it admit uncertainty and limitations rather than confidently asserting things it's uncertain about?",
+    "is_critical": true,
+    "help_text_no_bs": "Confident bullshit is worse than no answer. AI that admits \"I don't know\" is safe. AI that confidently makes up facts will cause expensive mistakes and erode trust.\n\nGOOD: When uncertain, it says so. Uses hedging language for ambiguous topics. Cites sources when making claims. Admits when context is insufficient. You can trust it to be honest about limitations.\n\nBAD: Always sounds confident even when wrong. Makes up facts that sound plausible. Never admits uncertainty. Your team has found multiple instances of confident-sounding nonsense.\n\nASK: How does the system handle uncertainty? Can you show examples of it admitting it doesn't know? How does it indicate confidence levels? Have you tuned prompts for honesty vs. helpfulness?",
+    "help_text_corporate": "Systems must appropriately communicate uncertainty and limitations to prevent propagation of inaccurate information and enable informed decision-making.\n\nGOOD: Systems use appropriate hedging language, cite sources, indicate confidence levels, and clearly communicate when information is insufficient or ambiguous.\n\nBAD: Systems present information with inappropriate confidence, make unsupported assertions, or fail to communicate uncertainty and limitations effectively.\n\nASK: How does your system communicate uncertainty? What mechanisms ensure appropriate confidence calibration?"
+  },
+  {
+    "key": "adapt-1",
+    "category_key": "adapt",
+    "order_index": 12,
+    "text_no_bs": "Does it use current-generation models, and does the vendor have a clear process for integrating new models?",
+    "text_corporate": "Does it use current-generation models, and does the vendor have a clear process for integrating new models?",
+    "is_critical": false,
+    "help_text_no_bs": "AI is improving fast. Tools locked to old models will be obsolete in months. If the vendor is already behind the curve or has no upgrade plan, you're buying something that's about to be outdated.\n\nGOOD: Uses latest models (GPT-4, Claude 3.5, etc.). Clear roadmap for adopting new models. Track record of quick updates when new models release. Easy for you to switch models.\n\nBAD: Still using GPT-3.5 or other old models. No clear upgrade path. Vendor seems unaware of recent model releases. Architecture makes model upgrades difficult.\n\nASK: Which model versions do you currently use? How quickly did you adopt the latest models? What's your process for evaluating and integrating new models?",
+    "help_text_corporate": "Rapid AI advancement requires vendors to maintain current model integrations and demonstrate capability to adopt emerging models as they become available.\n\nGOOD: Vendors use current-generation models with documented processes for evaluation and integration of new models and a track record of timely updates.\n\nBAD: Vendors use older model versions without clear upgrade plans or demonstrated capability to adopt new models as they emerge.\n\nASK: What is your model update strategy? How do you evaluate and integrate new model releases?"
+  },
+  {
+    "key": "adapt-2",
+    "category_key": "adapt",
+    "order_index": 13,
+    "text_no_bs": "Can you configure how much autonomy it has? (from human-in-the-loop to full autonomy)",
+    "text_corporate": "Can you configure how much autonomy it has? (from human-in-the-loop to full autonomy)",
+    "is_critical": false,
+    "help_text_no_bs": "Different tasks need different oversight levels. High-stakes decisions need human review. Routine tasks can be autonomous. If you can't tune autonomy, you're either over-reviewing (wasting time) or under-reviewing (taking risks).\n\nGOOD: Granular autonomy controls. You can set human review for specific task types or conditions. Can start with review and gradually increase autonomy as trust builds. Clear audit trail of autonomous actions.\n\nBAD: All-or-nothing: either everything needs review or nothing does. Can't set different rules for different task types. No way to gradually increase autonomy.\n\nASK: Can we configure when human review is required? Can we set different autonomy levels for different tasks? Can we change autonomy settings as we gain confidence?",
+    "help_text_corporate": "Organizations require flexible autonomy controls to balance efficiency with appropriate oversight based on task risk and organizational maturity with the tool.\n\nGOOD: Systems provide granular autonomy configuration with task-specific settings, approval workflows, and audit capabilities to support progressive delegation.\n\nBAD: Systems offer only binary autonomy settings without flexibility to adjust oversight based on task characteristics or evolving organizational confidence.\n\nASK: What autonomy controls exist? How can we configure review requirements for different task types?"
+  },
+  {
+    "key": "adapt-3",
+    "category_key": "adapt",
+    "order_index": 14,
+    "text_no_bs": "Can it connect to other tools through standard protocols (APIs, MCP, etc.)?",
+    "text_corporate": "Can it connect to other tools through standard protocols (APIs, MCP, etc.)?",
+    "is_critical": false,
+    "help_text_no_bs": "Walled gardens die. AI tools need to integrate with your existing stack. Standard protocols mean you can connect it to anything. Proprietary integrations mean you're locked in and will pay premium prices for every connection.\n\nGOOD: Open APIs, supports standard protocols (REST, GraphQL, MCP), documented webhooks. Easy to build custom integrations. Active integration ecosystem. Works with Zapier/similar tools.\n\nBAD: Only supports vendor-approved integrations. Proprietary connection methods. Limited API access. Each new integration requires vendor involvement and fees.\n\nASK: What APIs do you expose? Do you support standard protocols like MCP? Can we build custom integrations? Are there rate limits or integration fees?",
+    "help_text_corporate": "Standard integration protocols enable organizations to connect AI tools with existing systems and workflows without vendor-specific dependencies or restrictions.\n\nGOOD: Platforms provide comprehensive APIs supporting industry-standard protocols with clear documentation, reasonable rate limits, and integration flexibility.\n\nBAD: Platforms offer limited integration options using proprietary approaches that require vendor involvement and may incur additional costs.\n\nASK: What integration capabilities exist? Do you support standard protocols and provide comprehensive API documentation?"
+  },
+  {
+    "key": "leave-1",
+    "category_key": "leave",
+    "order_index": 15,
+    "text_no_bs": "Can you export everything in standard formats?",
+    "text_corporate": "Can you export everything in standard formats?",
+    "is_critical": true,
+    "help_text_no_bs": "If you can't export your data, you're trapped. Vendors know this and will raise prices or degrade service once you're locked in. Export capability is your exit strategy and your negotiating leverage.\n\nGOOD: One-click export to standard formats (JSON, CSV, PDF). Includes all data: content, metadata, history, configurations. Clear documentation of export formats. Regular automated exports supported.\n\nBAD: Exports are difficult, incomplete, or proprietary formats. \"We can help you export for a fee.\" Only exports recent data, not full history. No API export option.\n\nASK: Can we export all our data? What formats? Does it include all metadata and history? Can we automate exports? Is there a fee for exporting?",
+    "help_text_corporate": "Data portability ensures organizations maintain control over their information assets and retain flexibility to change vendors or bring capabilities in-house.\n\nGOOD: Platforms provide comprehensive export capabilities in standard formats including all data, metadata, and configurations with API support for automation.\n\nBAD: Platforms restrict export functionality, use proprietary formats, or charge fees for data extraction, creating switching barriers.\n\nASK: What data export capabilities exist? Are standard formats supported? Can exports be automated?"
+  },
+  {
+    "key": "leave-2",
+    "category_key": "leave",
+    "order_index": 16,
+    "text_no_bs": "Will crucial organizational knowledge remain a capability of your company, or get locked into this tool?",
+    "text_corporate": "Will crucial organizational knowledge remain a capability of your company, or get locked into this tool?",
+    "is_critical": true,
+    "help_text_no_bs": "The worst lock-in is when your team's expertise gets embedded in a vendor's tool. If critical knowledge only exists as prompts/workflows in their system, you lose capabilities if you leave. That's by design.\n\nGOOD: Knowledge stays with your team. Prompts and workflows are exportable and understandable. Using the tool builds transferable skills. You could recreate key workflows elsewhere if needed.\n\nBAD: Workflows only work in their system. Vendor holds your institutional knowledge hostage. Team becomes dependent on proprietary features. Leaving means losing organizational capabilities.\n\nASK: If we built significant workflows in your system, could we recreate them elsewhere? Do you use standard prompt/workflow formats? Would our team understand the exported configurations?",
+    "help_text_corporate": "Organizations must ensure critical knowledge and capabilities remain independent of vendor platforms to maintain strategic flexibility and institutional resilience.\n\nGOOD: Platforms use transparent, standard approaches that enable organizations to document and transfer knowledge independently of the vendor.\n\nBAD: Platforms embed organizational knowledge in proprietary structures that cannot be easily extracted or recreated in alternative environments.\n\nASK: How is organizational knowledge represented? Can critical workflows and prompts be documented independently of your platform?"
+  },
+  {
+    "key": "leave-3",
+    "category_key": "leave",
+    "order_index": 17,
+    "text_no_bs": "Is there a clear, reasonable migration path to another vendor or in-house build?",
+    "text_corporate": "Is there a clear, reasonable migration path to another vendor or in-house build?",
+    "is_critical": false,
+    "help_text_no_bs": "Switching costs are power. If leaving is prohibitively expensive or complex, the vendor owns you. They can degrade service, raise prices, or sell to a competitor and you're stuck.\n\nGOOD: Clear migration documentation. Standard formats for export. Reasonable transition period. Vendor actively helps migrations (because they're confident in their value). Low switching costs.\n\nBAD: Vague or no migration path. Export formats don't map to alternatives. Contracts with penalties for leaving. No support for migration. You'd have to rebuild everything from scratch.\n\nASK: If we decided to move to another vendor, what would migration involve? Do you provide migration support? What would we lose in a transition? What are contract termination terms?",
+    "help_text_corporate": "Clear migration paths ensure organizations maintain strategic flexibility and avoid dependence on single vendors for critical capabilities.\n\nGOOD: Vendors provide migration documentation, support transition processes, and use standard formats that facilitate movement to alternative solutions.\n\nBAD: Vendors create migration barriers through proprietary formats, lack of transition support, or contractual penalties that increase switching costs.\n\nASK: What migration support exists? How do your formats and approaches map to industry standards?"
+  },
+  {
+    "key": "learn-1",
+    "category_key": "learn",
+    "order_index": 18,
+    "text_no_bs": "Does it use standard LLM-friendly language or proprietary jargon?",
+    "text_corporate": "Does it use standard LLM-friendly language or proprietary jargon?",
+    "is_critical": false,
+    "help_text_no_bs": "Proprietary jargon is a lock-in tactic. If your team learns vendor-specific concepts that don't transfer, their skills become worthless if you switch tools. Standard terminology means portable knowledge.\n\nGOOD: Uses common AI/LLM terminology. Concepts transfer to other tools. Skills learned are valuable elsewhere. Documentation references standard practices. Easy for new team members familiar with AI.\n\nBAD: Made-up terms for standard concepts. Unique mental models that don't apply elsewhere. Team learns \"their way\" instead of AI fundamentals. Hard to hire for because skills don't transfer.\n\nASK: Do you use standard AI terminology or proprietary concepts? Will skills our team develops transfer to other tools? Can someone with general LLM experience use your tool easily?",
+    "help_text_corporate": "Standard terminology ensures team members develop transferable skills and organizations can leverage industry knowledge and talent pools effectively.\n\nGOOD: Platforms use industry-standard terminology and concepts that align with broader AI/LLM ecosystem and professional development.\n\nBAD: Platforms employ proprietary terminology that requires vendor-specific training and does not transfer to other tools or contexts.\n\nASK: What terminology and concepts does your platform use? How do they align with industry standards?"
+  },
+  {
+    "key": "learn-2",
+    "category_key": "learn",
+    "order_index": 19,
+    "text_no_bs": "Is it designed to encourage experimentation and tinkering?",
+    "text_corporate": "Is it designed to encourage experimentation and tinkering?",
+    "is_critical": false,
+    "help_text_no_bs": "The best AI users experiment and iterate. Tools that lock down experimentation keep you dependent on vendor expertise instead of building internal capability. That's intentional - they want you to need them.\n\nGOOD: Easy to try changes and see results. Sandboxes for testing. Encourages user experimentation. Good docs for power users. Community shares experiments. Vendors celebrate creative uses.\n\nBAD: Discourages customization. Makes experimentation difficult or risky. \"Best practices\" that really mean \"don't deviate from our way.\" Changes require vendor approval or support.\n\nASK: Do you encourage users to experiment? Do you provide sandboxes or safe testing environments? What resources exist for power users who want to push boundaries?",
+    "help_text_corporate": "Organizations benefit from environments that support experimentation, enabling teams to discover optimal approaches and build internal expertise.\n\nGOOD: Platforms provide safe experimentation environments, comprehensive documentation, and resources that encourage exploration and skill development.\n\nBAD: Platforms restrict experimentation, require vendor involvement for changes, or discourage user-driven optimization and customization.\n\nASK: What support exists for experimentation? Do you provide testing environments and resources for power users?"
+  },
+  {
+    "key": "learn-3",
+    "category_key": "learn",
+    "order_index": 20,
+    "text_no_bs": "After 6 months, will power users have generalizable AI skills or just expertise in this one tool?",
+    "text_corporate": "After 6 months, will power users have generalizable AI skills or just expertise in this one tool?",
+    "is_critical": false,
+    "help_text_no_bs": "Tool-specific expertise is worthless the moment you switch vendors. Real AI skills are valuable forever. Vendors sometimes deliberately make their tools \"unique\" to trap your team's knowledge.\n\nGOOD: Using the tool teaches prompt engineering, model selection, RAG patterns, etc. that apply anywhere. Team understands AI fundamentals. Skills are resume-worthy and transferable.\n\nBAD: Team only learns this vendor's specific interface and workflows. Knowledge is procedural (\"click here, then here\") not conceptual. Skills don't transfer or impress other employers.\n\nASK: What AI skills will our team develop using your tool? Are these skills transferable to other AI tools or building our own? Do you teach AI fundamentals or just your interface?",
+    "help_text_corporate": "Team development should result in transferable AI capabilities that benefit both individual career development and organizational strategic flexibility.\n\nGOOD: Tools support development of fundamental AI skills including prompt engineering, model understanding, and architectural patterns applicable across platforms.\n\nBAD: Tools foster only vendor-specific procedural knowledge without building transferable understanding of underlying AI concepts and practices.\n\nASK: What skills will team members develop? How do these skills transfer beyond your platform?"
+  }
+]
