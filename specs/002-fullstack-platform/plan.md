@@ -435,27 +435,30 @@ The documentation site uses a **custom React-based admin panel** integrated into
 - Need for frequent content changes (user requirement: comprehensive CMS)
 
 **Custom CMS advantages**:
-1. Full control over dual-tone split-pane editing experience
+1. Full control over dual-tone editing experience (single editor with version toggle)
 2. Native integration with existing Supabase setup (same database both apps use)
 3. Direct integration with Claude API for tone generation
 4. Consistent tech stack (React + TypeScript across all apps)
 5. No additional services or dependencies to manage
+6. Simple UX: one editor, toggle between versions, auto-generate button
 
 **Rejected alternatives**:
 - Static Docusaurus: Cannot meet "frequent changes" requirement
-- Headless CMS (Strapi/Payload): Harder to implement dual-tone side-by-side editing, adds service complexity
+- Headless CMS (Strapi/Payload): Harder to implement dual-tone editing with auto-generation, adds service complexity
+- Split-pane dual editor: Unnecessarily complex, user doesn't need to see both versions simultaneously
 
 ### CMS Components
 
 **Admin Panel** (`apps/docs/src/components/admin/`):
 
 1. **PageEditor.tsx** - Main editing interface
-   - Split-pane Markdown editor (Monaco Editor or similar)
-   - Left pane: "No BS" version
-   - Right pane: "Corporate" version
-   - Live preview below each editor
-   - "Auto-Generate Corporate" button (calls Claude API)
+   - Single Markdown editor (Monaco Editor or similar)
+   - Version toggle above editor: "No BS" / "Corporate"
+   - Editor content switches when toggling between versions
+   - Live preview panel below editor
+   - "Auto-Generate Corporate" button (only when editing No BS version)
    - Save/Publish/Unpublish actions
+   - Auto-save on idle (500ms debounce)
 
 2. **PageList.tsx** - Page management dashboard
    - List all pages with title, slug, published status
@@ -463,16 +466,11 @@ The documentation site uses a **custom React-based admin panel** integrated into
    - Create new page button
    - Edit/Delete actions
 
-3. **ToneGenerator.tsx** - Claude API integration component
-   - Takes "No BS" markdown content
-   - Calls Claude API via Edge Function
-   - Returns "Corporate" version
-   - Allows manual editing after generation
-
-4. **MarkdownPreview.tsx** - Live preview
+3. **MarkdownPreview.tsx** - Live preview
    - Renders Markdown to HTML in real-time
    - Shows exactly how content will appear to users
    - Respects Docusaurus styling
+   - Updates as admin types (200ms debounce)
 
 **Database Integration** (`apps/docs/src/services/cms.ts`):
 
@@ -541,13 +539,14 @@ module.exports = function databaseContentPlugin(context, options) {
 1. Admin logs in to `/admin` (Supabase auth check)
 2. Navigate to Pages section
 3. Click "Create New Page" or "Edit" existing page
-4. PageEditor component loads with split-pane Markdown editors
-5. Admin writes "No BS" version in left pane
+4. PageEditor component loads with Markdown editor (defaults to "No BS" version)
+5. Admin writes "No BS" content in editor
 6. Click "Auto-Generate Corporate" button
-7. ToneGenerator calls Claude API via Edge Function
-8. Corporate version appears in right pane (editable)
-9. Admin reviews both versions, makes adjustments
-10. Click "Publish" → `is_published = true` in database
+7. System calls Claude API via Edge Function
+8. Toggle switches to "Corporate" version, showing generated content (editable)
+9. Admin reviews and adjusts corporate version if needed
+10. Toggle back to "No BS" to continue editing, or save both versions
+11. Click "Publish" → `is_published = true` in database
 
 **User views content**:
 1. User visits `/docs/{slug}`
@@ -662,7 +661,7 @@ CREATE TABLE pages (
 | **6 database migrations** | Incremental deployment allows testing each feature area independently (core schema → vendors → evaluations → admin → feedback → RLS). | Single migration possible, but high-risk (no rollback points, harder to test). Incremental approach aligns with "test after each feature area" requirement. |
 | **3 Edge Functions** | Discord membership checks, feedback submission, and tone generation require server-side execution (API keys, GitHub integration). | Client-side Discord API calls expose API keys. GitHub issue creation requires server-side token. Claude API for tone generation must be server-side (expensive API, rate limiting). |
 | **Two Vercel Projects** | Documentation site requires custom CMS for frequent content changes (FR-030). Separating docs and evaluation tool allows independent deployment and clearer separation of concerns. | Single unified deployment initially attempted, but caused confusion with auto-created projects. Two projects simplifies: (1) Independent scaling, (2) Clear separation between content management (docs) and evaluation tool, (3) Different deployment cadences (docs change frequently, tool less so). |
-| **Custom CMS vs Headless CMS** | Custom React admin panel provides full control over dual-tone split-pane editing (FR-033), native Supabase integration, and direct Claude API integration (FR-034). | Headless CMS (Strapi/Payload) rejected because: (1) Harder to implement side-by-side dual-tone editing, (2) Adds another service to manage, (3) Less control over UX, (4) More complex to integrate with Claude API for auto-generation. Custom CMS keeps tech stack consistent (React + TypeScript + Supabase). |
+| **Custom CMS vs Headless CMS** | Custom React admin panel provides full control over dual-tone editing with version toggle (FR-033), native Supabase integration, and direct Claude API integration (FR-034). Simple UX: single editor, toggle between versions, auto-generate button. | Headless CMS (Strapi/Payload) rejected because: (1) Harder to implement dual-tone editing with auto-generation, (2) Adds another service to manage, (3) Less control over UX, (4) More complex to integrate with Claude API. Custom CMS keeps tech stack consistent (React + TypeScript + Supabase) and UX simple. |
 
 **Complexity Justification Summary**:
 
