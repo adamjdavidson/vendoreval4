@@ -25,26 +25,15 @@ export function AdminAuthCheck({ children }: AdminAuthCheckProps) {
   const checkAdminStatus = async () => {
     try {
       console.log('[AdminAuthCheck] Starting admin check...');
-      console.log('[AdminAuthCheck] Supabase URL:', supabase.supabaseUrl);
 
-      // TEMPORARY: Skip auth check and allow immediate access
-      // TODO: Implement proper authentication before production launch
-      console.warn('[AdminAuthCheck] Skipping auth - allowing immediate access for alpha testing');
-      setIsAdmin(true);
-      setIsChecking(false);
-      return;
-
-      // Original auth code (commented out for now):
-      /*
       // Get current user session
       const { data: { user }, error: userError } = await supabase.auth.getUser();
 
       if (userError || !user) {
-        // No user logged in
-        // For development: Allow access anyway (auth not fully implemented)
-        // For production: Redirect to login
-        console.warn('No user logged in - allowing access for development');
-        setIsAdmin(true); // TEMPORARY: Allow access in development
+        // No user logged in - allow access for alpha testing
+        // TODO: Require authentication before public launch
+        console.warn('[AdminAuthCheck] No user logged in - allowing access for alpha testing');
+        setIsAdmin(true);
         setIsChecking(false);
         return;
       }
@@ -59,20 +48,22 @@ export function AdminAuthCheck({ children }: AdminAuthCheckProps) {
 
       if (adminError || !adminData) {
         // User exists but is not an admin
-        setIsAdmin(false);
-        setError('Access denied. You must be an admin to access this area.');
+        console.warn('[AdminAuthCheck] User not in admin_users - allowing access for alpha testing');
+        // TODO: Block non-admin users before public launch
+        setIsAdmin(true);
         setIsChecking(false);
         return;
       }
 
       // User is a valid admin
+      console.log('[AdminAuthCheck] User is verified admin');
       setIsAdmin(true);
       setIsChecking(false);
-      */
     } catch (err) {
-      console.error('Admin auth check error:', err);
-      // For development: Allow access on error
-      setIsAdmin(true); // TEMPORARY: Allow access in development
+      console.error('[AdminAuthCheck] Error during auth check:', err);
+      // For alpha testing: Allow access on error
+      // TODO: Block access on error before public launch
+      setIsAdmin(true);
       setIsChecking(false);
     }
   };
