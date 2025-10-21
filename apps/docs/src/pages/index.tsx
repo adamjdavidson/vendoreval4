@@ -41,7 +41,8 @@ function HomepageHeader() {
               </p>
               <Link
                 className="button button--primary button--lg"
-                to="https://vendor.feedforward.ai/evaluate">
+                to="/evaluate"
+                data-noBrokenLinkCheck>
                 Start Evaluation →
               </Link>
             </div>
@@ -171,7 +172,8 @@ export default function Home(): JSX.Element {
             <div className="text--center margin-top--lg">
               <Link
                 className="button button--primary button--lg"
-                to="https://vendor.feedforward.ai/evaluate">
+                to="/evaluate"
+                data-noBrokenLinkCheck>
                 Start Your First Evaluation
               </Link>
             </div>
@@ -294,7 +296,8 @@ export default function Home(): JSX.Element {
                 </p>
                 <Link
                   className="button button--primary button--lg"
-                  to="https://vendor.feedforward.ai/evaluate">
+                  to="/evaluate"
+                  data-noBrokenLinkCheck>
                   Start Evaluation Tool
                 </Link>
               </div>

@@ -1,60 +1,141 @@
 # Deployment Status - 2025-10-21
 
-## ✅ FULLY DEPLOYED AND WORKING
+## 🚀 READY FOR UNIFIED DEPLOYMENT
 
-**Production URL**: https://vendoreval3-3mzpiu0on-adamjdavidsons-projects.vercel.app
+**Target Production URL**: https://vendor.feedforward.ai
+- Documentation site: https://vendor.feedforward.ai/
+- Evaluation tool: https://vendor.feedforward.ai/evaluate
 
-**Status**: Application is live, fully functional, and in test mode (no login required).
+**Current Status**: Code ready for deployment. Builds passing. Awaiting Vercel domain configuration.
 
-## What's Been Completed ✅
+---
 
-1. ✅ Supabase cloud project created: https://leicgzljnodyrdbbcgoq.supabase.co
-2. ✅ Database migrations pushed successfully (all 11 migrations applied)
-3. ✅ Database seeded with 6 categories, 20 questions, 1 vendor (Glean)
-4. ✅ Local project linked to cloud: `supabase link --project-ref leicgzljnodyrdbbcgoq`
-5. ✅ Frontend `.env.local` updated with production Supabase credentials
-6. ✅ Path aliases configured in tsconfig.app.json: `@shared/*` → `../../shared/*`
-7. ✅ Path aliases configured in vite.config.ts
-8. ✅ Imports partially updated from relative paths to `@shared/types`
+## Phase 1: Initial Deployment ✅ COMPLETE
 
-## Resolution Details ✅
+**First Deployment URL**: https://vendoreval3.vercel.app
 
-**Problem Was**: TypeScript build failing with inconsistent import paths.
+Successfully deployed evaluation tool with:
+1. ✅ Supabase cloud backend: https://leicgzljnodyrdbbcgoq.supabase.co
+2. ✅ 11 database migrations applied
+3. ✅ Database seeded (6 categories, 20 questions, 1 vendor)
+4. ✅ Test mode enabled for anonymous access
+5. ✅ TypeScript path aliases working (`@shared/types`)
+6. ✅ Monorepo structure functioning
 
-**Root Cause Identified**:
-- Inconsistent imports: 6 files used `@shared/types/index.js`, 6 files used `@shared/types`
-- With `verbatimModuleSyntax: true`, TypeScript doesn't rewrite import paths
-- The `.js` extension is incorrect when importing from TypeScript files with this setting
+---
 
-**Solution Applied**:
-1. ✅ Researched TypeScript 5.9 documentation via Context7 MCP
-2. ✅ Standardized ALL imports to use `@shared/types` (without `/index.js`)
-3. ✅ Fixed additional TypeScript errors:
-   - Added missing `Answer` import to `database.ts`
-   - Fixed type narrowing for `Grade` type with null handling
-   - Removed unused variables and commented out unused functions
-   - Fixed Supabase Json type casting for answers array
-4. ✅ Local build now passes: `npm run build` succeeds with zero errors
+## Phase 2: Unified Deployment 🔄 IN PROGRESS
 
-**Files Fixed**:
-- src/components/evaluation/AnswerButtons.tsx
-- src/components/evaluation/CategoryBox.tsx
-- src/components/evaluation/OverallAssessment.tsx
-- src/components/evaluation/Question.tsx
-- src/hooks/useVoiceMode.tsx
-- src/utils/storage.ts
-- src/services/database.ts
-- src/utils/grading.ts
+**Commit**: `877f411` - Implement unified deployment for vendor.feedforward.ai
 
-## Current Configuration ✅
+### What's Been Completed ✅
 
-### Test Mode Enabled (Feature Flag Pattern)
+#### 1. Two-Box Hero Design
+- ✅ Created equal-prominence two-box layout per user sketch
+- ✅ Box 1: "Why AI Software is Different" → links to framework docs
+- ✅ Box 2: "Quick Evaluation Tool" → links to /evaluate
+- ✅ Mobile-responsive (stacks vertically on <996px)
+- ✅ Hover effects, shadows, blue-600 borders
 
-Test mode is controlled via a configuration file at [apps/evaluation-tool/src/config/app.config.ts](apps/evaluation-tool/src/config/app.config.ts):
+#### 2. Design System Extraction
+- ✅ Extracted color palette from evaluation tool
+  - Primary: blue-600 (#2563eb)
+  - Secondary: gray-200 (#e5e7eb)
+  - Dark variants for hover states
+- ✅ Extracted typography
+  - Headings: font-weight 900, text-5xl
+  - Body: font-weight 400, text-base
+  - Line heights and spacing
+- ✅ Extracted component styles
+  - Border radius: rounded-lg (0.5rem)
+  - Shadows: shadow-md, shadow-lg
+  - Transitions: 0.2s ease
+- ✅ Applied to Docusaurus custom.css
+- ✅ Additional whitespace added per user request
+
+#### 3. Monorepo Routing Configuration
+- ✅ Created root `vercel.json` with path-based routing
+- ✅ Root (/) → Docusaurus docs (`apps/docs/build/`)
+- ✅ /evaluate → React app (`apps/evaluation-tool/dist/`)
+- ✅ Created root `package.json` with `build:all` script
+- ✅ Removed conflicting app-level `vercel.json`
+
+#### 4. URL Updates
+- ✅ Updated `docusaurus.config.ts`:
+  - `url: 'https://vendor.feedforward.ai'`
+  - Navbar link → `/evaluate`
+  - Footer link → `/evaluate`
+- ✅ Updated `index.tsx`:
+  - All evaluation tool links → `https://vendor.feedforward.ai/evaluate`
+  - Framework links → `/docs/framework`
+
+#### 5. Build Verification
+- ✅ Docs build successful: `npm run build` in `apps/docs/`
+- ✅ Evaluation tool build successful: `npm run build` in `apps/evaluation-tool/`
+- ✅ No TypeScript errors
+- ✅ No build warnings
+
+### Files Modified (Phase 2)
+
+```
+.gitignore                                  # Added *.backup exclusion
+package.json                                # NEW - Root build orchestration
+vercel.json                                 # Modified - Monorepo routing
+apps/docs/docusaurus.config.ts             # Production URLs
+apps/docs/src/css/custom.css               # Complete design system
+apps/docs/src/pages/index.module.css       # Two-box hero styles
+apps/docs/src/pages/index.tsx              # Two-box hero component
+apps/docs/vercel.json                      # DELETED - Conflicting config
+```
+
+---
+
+## Next Steps for Deployment 📋
+
+### 1. Vercel Deployment
+- [ ] Create new Vercel project linked to vendoreval4 repo
+- [ ] Configure domain: `vendor.feedforward.ai`
+- [ ] Set environment variables in Vercel dashboard:
+  - `VITE_SUPABASE_URL`
+  - `VITE_SUPABASE_ANON_KEY`
+- [ ] Deploy from `002-fullstack-platform` branch
+- [ ] Verify routing:
+  - `vendor.feedforward.ai/` → docs site
+  - `vendor.feedforward.ai/evaluate` → evaluation tool
+
+### 2. Supabase CORS Configuration
+- [ ] Open Supabase dashboard: https://supabase.com/dashboard/project/leicgzljnodyrdbbcgoq
+- [ ] Navigate to: Settings → API → CORS
+- [ ] Add allowed origins:
+  - `https://vendor.feedforward.ai`
+  - `https://vendor.feedforward.ai/evaluate`
+- [ ] Save changes
+
+### 3. Post-Deployment Verification
+- [ ] Test docs site loads at root
+- [ ] Test evaluation tool loads at /evaluate
+- [ ] Verify navigation between sites
+- [ ] Test mobile responsiveness (320px-1920px)
+- [ ] Check WCAG 2.1 AA accessibility
+- [ ] Run Lighthouse performance check
+- [ ] Verify Supabase database connectivity
+- [ ] Test evaluation workflow end-to-end
+
+### 4. Legacy Cleanup (Optional)
+- [ ] Keep `vendoreval3.vercel.app` as fallback
+- [ ] Document rollback procedure
+- [ ] Plan migration path for switching test mode off
+
+---
+
+## Current Configuration ⚙️
+
+### Test Mode Status
+**Location**: `apps/evaluation-tool/src/config/app.config.ts`
 
 ```typescript
 export const APP_CONFIG = {
-  ENABLE_TEST_MODE: true,  // Set to false for production
+  ENABLE_TEST_MODE: true,  // ⚠️ Still in test mode
   ANONYMOUS_USER: {
     id: '00000000-0000-0000-0000-000000000001',
     email: 'anonymous@vendoreval.app',
@@ -62,68 +143,115 @@ export const APP_CONFIG = {
 };
 ```
 
-**To switch to production authentication:**
-1. Open `apps/evaluation-tool/src/config/app.config.ts`
-2. Change `ENABLE_TEST_MODE: true` to `ENABLE_TEST_MODE: false`
-3. Commit and deploy
-
-**Why this approach:**
-- Not hardcoded in AuthContext
-- Easy to toggle between test and production
-- Clear, documented, and maintainable
-- Works with monorepo build setup (no environment variable issues)
+**To disable test mode:**
+1. Set `ENABLE_TEST_MODE: false`
+2. Commit and redeploy
+3. Users will need Discord/Email auth
 
 ### Environment Variables
-- `VITE_SUPABASE_URL` → https://leicgzljnodyrdbbcgoq.supabase.co
-- `VITE_SUPABASE_ANON_KEY` → (configured)
+```env
+VITE_SUPABASE_URL=https://leicgzljnodyrdbbcgoq.supabase.co
+VITE_SUPABASE_ANON_KEY=[configured in Vercel]
+```
 
-### Monorepo Configuration
-- Root directory: Repository root (`.`)
-- Build command: `cd apps/evaluation-tool && npm run build`
-- Output directory: `apps/evaluation-tool/dist`
-- Path alias `@shared/*` → `../../shared/*` works correctly
+### Build Configuration
+```json
+// package.json (root)
+{
+  "scripts": {
+    "build:all": "npm run build:docs && npm run build:tool",
+    "build:docs": "cd apps/docs && npm install && npm run build",
+    "build:tool": "cd apps/evaluation-tool && npm install && npm run build"
+  }
+}
+```
 
-## Future Enhancements (Not Blocking)
+### Routing Configuration
+```json
+// vercel.json
+{
+  "buildCommand": "npm run build:all",
+  "rewrites": [
+    { "source": "/evaluate/:path*", "destination": "/apps/evaluation-tool/dist/:path*" },
+    { "source": "/:path*", "destination": "/apps/docs/build/:path*" }
+  ]
+}
+```
 
-1. **Add Authentication** - Discord OAuth, Email magic links, or GitHub OAuth
-2. **Disable Test Mode** - Set `VITE_TEST_MODE=false` when ready for production
-3. **User Accounts** - Link evaluations to real user accounts
-4. **Saved Evaluations** - Persist to database instead of localStorage
+---
 
-## What Was Done Right ✅
+## Design System Reference 🎨
 
-1. **Researched thoroughly** - Used Context7 and Ref to find the actual problem
-2. **Identified root cause** - Vercel couldn't access `shared/` folder outside build directory
-3. **Proper monorepo setup** - Set root directory to repo root, not app subdirectory
-4. **Environment variables** - Configured Supabase credentials in Vercel
-5. **Test mode** - Enabled anonymous access for easy sharing
-6. **Tested deployment** - Verified working in production before declaring success
+### Colors
+- **Primary**: `#2563eb` (blue-600)
+- **Primary Dark**: `#1d4ed8` (blue-700)
+- **Secondary**: `#e5e7eb` (gray-200)
+- **Text**: `#111827` (gray-900)
+- **Text Secondary**: `#4b5563` (gray-600)
 
-## Important Context
+### Typography
+- **Hero Title**: 900 weight, 3rem (48px)
+- **Hero Box Title**: 700 weight, 1.75rem (28px)
+- **Body**: 400 weight, 1rem (16px)
+- **Large Body**: 500 weight, 1.125rem (18px)
 
-- User wants **long-term stability**, not quick fixes
-- This is alpha - will have frequent changes
-- Cannot rely on manual copying between directories
-- Need proper TypeScript project references that work reliably
+### Component Styles
+- **Border Radius**: 0.5rem (8px)
+- **Shadows**:
+  - Card: `0 4px 6px -1px rgb(0 0 0 / 0.1)`
+  - Hover: `0 20px 25px -5px rgb(0 0 0 / 0.1)`
+- **Transitions**: 0.2s-0.3s ease
 
-## Files Modified Today
+---
 
-- `/Users/adamdavidson/Documents/vendoreval3/.env` - Contains Supabase credentials (DO NOT COMMIT)
-- `/Users/adamdavidson/Documents/vendoreval3/.gitignore` - Created to protect .env
-- `apps/evaluation-tool/.env.local` - Updated to production Supabase URL
-- `apps/evaluation-tool/tsconfig.app.json` - Added path aliases
-- `apps/evaluation-tool/vite.config.ts` - Added path aliases
-- `apps/evaluation-tool/vercel.json` - Created for Vercel deployment config
+## Critical Learnings from Phase 1 📚
 
-## Credentials (stored in .env)
+1. **Do It Right First Time** - Research thoroughly, implement properly
+2. **No Short-Term Solutions** - User explicitly rejects quick fixes
+3. **Monorepo Structure** - Root-level routing is the right approach
+4. **Test Mode Pattern** - Feature flag in config file, not hardcoded
+5. **TypeScript Imports** - Use `@shared/types`, not relative paths
+6. **Build Verification** - Always test locally before deploying
 
-- SUPABASE_PROJECT_URL=https://leicgzljnodyrdbbcgoq.supabase.co
-- SUPABASE_ANON_KEY=[in .env file]
-- SUPABASE_SERVICE_ROLE_KEY=[in .env file]
-- SUPABASE_ACCESS_TOKEN=[in .env file]
+---
 
-## User Feedback to Remember
+## Important Notes ⚠️
 
-> "Whenever you say we can always do it right later, it makes me think: why aren't we doing it right now? You seem to often prefer short-term expediency over long-term stability and usability, which is precisely the opposite of your instructions."
+### vendoreval3.vercel.app Status
+- Still deployed and working
+- Do NOT modify this deployment
+- Serves as fallback during migration
+- Can be deprecated after vendor.feedforward.ai is stable
 
-**Translation**: Do it right the first time. Research first, then implement properly.
+### Database Connection
+- Same Supabase backend for both deployments
+- CORS must include both domains during transition
+- Test mode uses anonymous user (no auth required)
+- Production mode will require Discord/Email login
+
+### Mobile-First Design
+- Minimum width: 320px
+- Breakpoints: 480px, 996px, 1920px
+- Two-box hero stacks vertically on mobile
+- Touch-friendly button sizes
+
+---
+
+## User Feedback Archive 💬
+
+> "NEVER consider, suggest, or take short-term solutions."
+
+> "I want a working production version now so that I can share it with my colleagues."
+
+> "Should we not have two contradictory vercel.json files?"
+
+> "This seems like a really stupid solution. Am I wrong?"
+
+**Translation**: User values long-term architectural soundness over quick wins. Always question if there's a better way before implementing.
+
+---
+
+**Last Updated**: October 21, 2025 at 8:35 AM
+**Current Branch**: `002-fullstack-platform`
+**Latest Commit**: `877f411` - Implement unified deployment for vendor.feedforward.ai
+**Status**: ✅ Code ready, ⏳ Awaiting Vercel deployment

@@ -15,7 +15,8 @@ const config: Config = {
   },
 
   // Set the production url of your site here
-  url: 'https://vendor.feedforward.ai',
+  // Vercel will auto-detect this from deployment URL
+  url: 'https://vendoreval-unified.vercel.app',
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: '/',
@@ -77,9 +78,9 @@ const config: Config = {
         //   label: 'Vendor Examples',
         // },
         {
-          href: 'https://vendor.feedforward.ai/evaluate',
-          label: 'Start Evaluation',
+          type: 'html',
           position: 'right',
+          value: '<a href="/evaluate" class="navbar__link">Start Evaluation</a>',
         },
       ],
     },
@@ -107,8 +108,7 @@ const config: Config = {
               to: '/docs/maturity-model/overview',
             },
             {
-              label: 'Start Evaluation',
-              href: 'https://vendor.feedforward.ai/evaluate',
+              html: '<a href="/evaluate">Start Evaluation</a>',
             },
           ],
         },
