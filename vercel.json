@@ -12,20 +12,6 @@
       "destination": "/apps/docs/build/:path*"
     }
   ],
-  "routes": [
-    {
-      "src": "/evaluate/(.*)",
-      "dest": "/apps/evaluation-tool/dist/$1"
-    },
-    {
-      "src": "/evaluate",
-      "dest": "/apps/evaluation-tool/dist/index.html"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/apps/docs/build/$1"
-    }
-  ],
   "outputDirectory": ".",
   "framework": null
 }
