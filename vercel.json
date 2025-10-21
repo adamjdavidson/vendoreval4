@@ -1,12 +1,31 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "buildCommand": "cd apps/evaluation-tool && npm run build",
-  "installCommand": "cd apps/evaluation-tool && npm install",
-  "outputDirectory": "apps/evaluation-tool/dist",
+  "buildCommand": "npm run build:all",
+  "installCommand": "npm install",
   "rewrites": [
     {
-      "source": "/(.*)",
-      "destination": "/index.html"
+      "source": "/evaluate/:path*",
+      "destination": "/apps/evaluation-tool/dist/:path*"
+    },
+    {
+      "source": "/:path*",
+      "destination": "/apps/docs/build/:path*"
     }
-  ]
+  ],
+  "routes": [
+    {
+      "src": "/evaluate/(.*)",
+      "dest": "/apps/evaluation-tool/dist/$1"
+    },
+    {
+      "src": "/evaluate",
+      "dest": "/apps/evaluation-tool/dist/index.html"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/apps/docs/build/$1"
+    }
+  ],
+  "outputDirectory": ".",
+  "framework": null
 }

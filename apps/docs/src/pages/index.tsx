@@ -12,17 +12,40 @@ function HomepageHeader() {
       <div className="container">
         <h1 className="hero__title">{siteConfig.title}</h1>
         <p className="hero__subtitle">{siteConfig.tagline}</p>
-        <div className={styles.buttons}>
-          <Link
-            className="button button--secondary button--lg"
-            to="https://vendoreval3.vercel.app">
-            Start Evaluation →
-          </Link>
-          <Link
-            className="button button--outline button--secondary button--lg"
-            to="/docs/framework">
-            Learn the Framework
-          </Link>
+
+        {/* Two-Box Hero Layout */}
+        <div className={styles.heroBoxes}>
+          {/* Box 1: Framework Documentation */}
+          <div className={styles.heroBox}>
+            <div className={styles.heroBoxContent}>
+              <h2 className={styles.heroBoxTitle}>Why AI Software is Different</h2>
+              <p className={styles.heroBoxDescription}>
+                AI procurement requires fundamentally different evaluation criteria.
+                Learn the framework designed for Fortune 500 executives.
+              </p>
+              <Link
+                className="button button--primary button--lg"
+                to="/docs/framework">
+                Explore Framework →
+              </Link>
+            </div>
+          </div>
+
+          {/* Box 2: Evaluation Tool */}
+          <div className={styles.heroBox}>
+            <div className={styles.heroBoxContent}>
+              <h2 className={styles.heroBoxTitle}>Quick Evaluation Tool</h2>
+              <p className={styles.heroBoxDescription}>
+                Use this when talking to vendor sales. Systematically assess vendors
+                across six critical criteria in 10 minutes.
+              </p>
+              <Link
+                className="button button--primary button--lg"
+                to="https://vendor.feedforward.ai/evaluate">
+                Start Evaluation →
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
     </header>
@@ -148,7 +171,7 @@ export default function Home(): JSX.Element {
             <div className="text--center margin-top--lg">
               <Link
                 className="button button--primary button--lg"
-                to="https://vendoreval3.vercel.app">
+                to="https://vendor.feedforward.ai/evaluate">
                 Start Your First Evaluation
               </Link>
             </div>
@@ -271,7 +294,7 @@ export default function Home(): JSX.Element {
                 </p>
                 <Link
                   className="button button--primary button--lg"
-                  to="https://vendoreval3.vercel.app">
+                  to="https://vendor.feedforward.ai/evaluate">
                   Start Evaluation Tool
                 </Link>
               </div>

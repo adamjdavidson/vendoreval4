@@ -1,30 +1,253 @@
 /**
- * Any CSS included here will be global. The classic template
- * bundles Infima by default. Infima is a CSS framework designed to
- * work well for content-centric websites.
+ * Custom CSS for VendorEval Documentation
+ * Design system extracted from evaluation tool to ensure visual cohesion
  */
 
-/* You can override the default Infima variables here. */
+/* ============================================
+   Color Variables - Matching Evaluation Tool
+   ============================================ */
 :root {
-  --ifm-color-primary: #2e8555;
-  --ifm-color-primary-dark: #29784c;
-  --ifm-color-primary-darker: #277148;
-  --ifm-color-primary-darkest: #205d3b;
-  --ifm-color-primary-light: #33925d;
-  --ifm-color-primary-lighter: #359962;
-  --ifm-color-primary-lightest: #3cad6e;
+  /* Primary - Blue 600 from evaluation tool */
+  --ifm-color-primary: #2563eb;
+  --ifm-color-primary-dark: #1d4ed8;
+  --ifm-color-primary-darker: #1e40af;
+  --ifm-color-primary-darkest: #1e3a8a;
+  --ifm-color-primary-light: #3b82f6;
+  --ifm-color-primary-lighter: #60a5fa;
+  --ifm-color-primary-lightest: #93c5fd;
+
+  /* Gray scale - matching evaluation tool text colors */
+  --ifm-color-gray-900: #111827;
+  --ifm-color-gray-700: #374151;
+  --ifm-color-gray-600: #4b5563;
+  --ifm-color-gray-200: #e5e7eb;
+  --ifm-color-gray-100: #f3f4f6;
+  --ifm-color-gray-50: #f9fafb;
+
+  /* Background colors */
+  --ifm-background-color: #ffffff;
+  --ifm-background-surface-color: var(--ifm-color-gray-50);
+
+  /* Font settings */
+  --ifm-font-family-base: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --ifm-font-size-base: 100%;
+  --ifm-line-height-base: 1.65;
+
+  /* Heading font weights - matching evaluation tool */
+  --ifm-heading-font-weight: 700;
+  --ifm-font-weight-semibold: 600;
+  --ifm-font-weight-bold: 700;
+
+  /* Code font */
   --ifm-code-font-size: 95%;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+
+  /* Border radius - matching evaluation tool (rounded-lg = 0.5rem) */
+  --ifm-button-border-radius: 0.5rem;
+  --ifm-card-border-radius: 0.5rem;
+  --ifm-global-radius: 0.5rem;
+
+  /* Spacing */
+  --ifm-spacing-horizontal: 1.5rem;
+  --ifm-spacing-vertical: 1.5rem;
 }
 
-/* For readability concerns, you should choose a lighter palette in dark mode. */
+/* Dark mode */
 [data-theme='dark'] {
-  --ifm-color-primary: #25c2a0;
-  --ifm-color-primary-dark: #21af90;
-  --ifm-color-primary-darker: #1fa588;
-  --ifm-color-primary-darkest: #1a8870;
-  --ifm-color-primary-light: #29d5b0;
-  --ifm-color-primary-lighter: #32d8b4;
-  --ifm-color-primary-lightest: #4fddbf;
+  --ifm-color-primary: #3b82f6;
+  --ifm-color-primary-dark: #2563eb;
+  --ifm-color-primary-darker: #1d4ed8;
+  --ifm-color-primary-darkest: #1e40af;
+  --ifm-color-primary-light: #60a5fa;
+  --ifm-color-primary-lighter: #93c5fd;
+  --ifm-color-primary-lightest: #bfdbfe;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+}
+
+/* ============================================
+   Typography - Matching Evaluation Tool
+   ============================================ */
+
+h1 {
+  font-weight: 900; /* extrabold from tool */
+  font-size: 3rem; /* text-5xl from tool */
+}
+
+h2 {
+  font-weight: 700; /* bold */
+  font-size: 2.25rem;
+}
+
+h3 {
+  font-weight: 700;
+  font-size: 1.875rem;
+}
+
+.hero__title {
+  font-weight: 900 !important;
+  font-size: 3rem !important;
+}
+
+.hero__subtitle {
+  font-size: 1.25rem;
+  color: var(--ifm-color-gray-600);
+}
+
+/* ============================================
+   Buttons - Matching Evaluation Tool Style
+   ============================================ */
+
+.button {
+  border-radius: 0.5rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  padding: 0.75rem 1.5rem;
+}
+
+.button--primary {
+  background-color: #2563eb;
+  border-color: #2563eb;
+}
+
+.button--primary:hover {
+  background-color: #1d4ed8;
+  border-color: #1d4ed8;
+}
+
+.button--secondary {
+  background-color: var(--ifm-color-gray-200);
+  color: var(--ifm-color-gray-900);
+  border-color: var(--ifm-color-gray-200);
+}
+
+.button--secondary:hover {
+  background-color: #d1d5db; /* gray-300 */
+  color: var(--ifm-color-gray-900);
+  border-color: #d1d5db;
+}
+
+.button--lg {
+  font-size: 1.125rem;
+  padding: 0.875rem 2rem;
+}
+
+/* ============================================
+   Cards - Matching Evaluation Tool
+   ============================================ */
+
+.card {
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  border: 1px solid var(--ifm-color-gray-200);
+}
+
+.card__header h3 {
+  font-weight: 700;
+}
+
+/* ============================================
+   Hero Section Customization
+   ============================================ */
+
+.hero {
+  padding: 4rem 0;
+}
+
+.hero--primary {
+  background-color: var(--ifm-background-color);
+  color: var(--ifm-color-gray-900);
+}
+
+/* ============================================
+   Sections - Matching Evaluation Tool Spacing
+   ============================================ */
+
+.margin-bottom--lg {
+  margin-bottom: 4rem !important;
+}
+
+.margin-bottom--md {
+  margin-bottom: 2rem !important;
+}
+
+.padding-vert--lg {
+  padding-top: 4rem !important;
+  padding-bottom: 4rem !important;
+}
+
+/* ============================================
+   Mobile Responsiveness - 320px minimum
+   ============================================ */
+
+@media screen and (max-width: 996px) {
+  h1, .hero__title {
+    font-size: 2.5rem !important;
+  }
+
+  .hero {
+    padding: 2rem 0;
+  }
+
+  .button--lg {
+    font-size: 1rem;
+    padding: 0.75rem 1.5rem;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  h1, .hero__title {
+    font-size: 2rem !important;
+  }
+
+  .hero__subtitle {
+    font-size: 1rem;
+  }
+}
+
+/* ============================================
+   Accessibility - WCAG 2.1 AA Compliance
+   ============================================ */
+
+/* Ensure focus indicators are visible */
+a:focus,
+button:focus,
+.button:focus {
+  outline: 2px solid var(--ifm-color-primary);
+  outline-offset: 2px;
+}
+
+/* Maintain contrast ratios */
+.text--secondary {
+  color: var(--ifm-color-gray-600);
+}
+
+/* ============================================
+   Additional Whitespace - Per User Request
+   ============================================ */
+
+.container {
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+
+.row {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+section {
+  padding-top: 4rem;
+  padding-bottom: 4rem;
+}
+
+@media screen and (max-width: 996px) {
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  section {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
 }

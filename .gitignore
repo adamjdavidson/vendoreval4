@@ -30,3 +30,6 @@ Thumbs.db
 # Beads
 .beads/*.db
 .vercel
+
+# Backup files
+*.backup
