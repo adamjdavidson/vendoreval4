@@ -304,7 +304,88 @@ questions.forEach(q => { ... });
 
 ---
 
-## Article X: Quality Gates
+## Article X: Deployment Architecture
+
+### Infrastructure Decisions
+
+**DEPLOYMENT ARCHITECTURE: TWO SEPARATE VERCEL PROJECTS**
+
+This is a **CONSTITUTIONAL PRINCIPLE**, not a preference. All deployment work MUST follow this architecture.
+
+#### The Architecture
+
+```
+GitHub Repository: adamjdavidson/vendoreval4
+    │
+    ├─► Vercel Project 1: Documentation Site
+    │   └─► Root Directory: apps/docs
+    │       └─► Framework: Docusaurus
+    │           └─► Deploys to: vendor.feedforward.ai
+    │
+    └─► Vercel Project 2: Evaluation Tool
+        └─► Root Directory: apps/evaluation-tool
+            └─► Framework: Vite + React
+                └─► Deploys to: tool.vendor.feedforward.ai
+```
+
+#### Critical Requirements
+
+1. **Same Repository, Two Projects**: Both Vercel projects connect to the SAME GitHub repository
+2. **Different Root Directories**: Each project MUST have different Root Directory configured in Vercel Dashboard
+   - Docs: `apps/docs`
+   - Tool: `apps/evaluation-tool`
+3. **Independent Builds**: Each project builds independently with its own framework detection
+4. **No Monorepo Build Tools**: NO Turborepo, NO Nx, NO root-level build orchestration
+5. **No Root Configuration**: NO root `vercel.json`, NO root `package.json` with build scripts
+
+#### Why This Architecture
+
+- **Simplicity**: Each app builds using standard framework tooling
+- **Independence**: Apps can deploy separately without affecting each other
+- **Official Support**: Vercel's documented approach for monorepos without build tools
+- **Proven Pattern**: Used by thousands of monorepos on Vercel
+
+#### What NOT To Do
+
+❌ **NEVER** suggest a single Vercel project building both apps
+❌ **NEVER** use root-level `vercel.json` with rewrites/routing
+❌ **NEVER** create build orchestration scripts at repository root
+❌ **NEVER** try to "optimize" by combining deployments
+
+#### How To Verify
+
+- Check `DEPLOYMENT_GUIDE.md` for current deployment instructions
+- Check Vercel Dashboard: Each project should have Root Directory set
+- Check repository root: Should have NO `vercel.json` or `package.json`
+
+#### AI Assistant Protocol
+
+**When asked about deployment:**
+
+1. **FIRST**: Read `DEPLOYMENT_STATUS.md` and `DEPLOYMENT_GUIDE.md`
+2. **VERIFY**: Current architecture matches this constitutional principle
+3. **IF CONFUSED**: Ask user to clarify rather than assuming
+4. **NEVER**: Pivot architecture without explicit user approval and constitutional amendment
+
+**If suggesting changes:**
+
+1. State: "This contradicts Article X of the constitution which defines two-project architecture"
+2. Ask: "Should we amend the constitution to change the deployment architecture?"
+3. Document: Why the change is needed and what trade-offs are involved
+
+### Amendment Process for Deployment Architecture
+
+Changing deployment architecture requires:
+
+1. **Constitutional Amendment**: Update Article X with new architecture
+2. **Version Bump**: Increment to next major version (e.g., 1.1.0 → 2.0.0)
+3. **Documentation Update**: Update all references in DEPLOYMENT_STATUS.md, DEPLOYMENT_GUIDE.md, specs/
+4. **Beads Tasks**: Create implementation tasks for migration
+5. **Testing**: Verify new architecture works before deprecating old
+
+---
+
+## Article XI: Quality Gates
 
 ### Pre-Implementation Gates
 
