@@ -1,16 +1,19 @@
 import React from 'react';
 import Layout from '@theme/Layout';
 import Link from '@docusaurus/Link';
+import { AdminAuthCheck } from '../../components/auth/AdminAuthCheck';
 
 /**
  * Admin Dashboard - Main Overview
  *
  * Entry point for CMS administration with quick links to all management areas.
+ * Protected by AdminAuthCheck - requires admin authentication.
  */
 
 export default function AdminDashboard() {
   return (
     <Layout title="Admin Dashboard" description="VendorEval CMS Administration">
+      <AdminAuthCheck>
       <div style={{ maxWidth: '1200px', margin: '40px auto', padding: '0 20px' }}>
         {/* Header */}
         <div style={{ marginBottom: '40px' }}>
@@ -152,6 +155,7 @@ export default function AdminDashboard() {
           </div>
         </div>
       </div>
+      </AdminAuthCheck>
     </Layout>
   );
 }
