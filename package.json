@@ -9,9 +9,5 @@
     "build:tool": "cd apps/evaluation-tool && npm install && npm run build",
     "dev:docs": "cd apps/docs && npm run start",
     "dev:tool": "cd apps/evaluation-tool && npm run dev"
-  },
-  "workspaces": [
-    "apps/docs",
-    "apps/evaluation-tool"
-  ]
+  }
 }
