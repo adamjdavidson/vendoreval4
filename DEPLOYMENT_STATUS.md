@@ -1,12 +1,24 @@
 # Deployment Status - 2025-10-21
 
-## 🚀 READY FOR UNIFIED DEPLOYMENT
+## 🚀 TWO SEPARATE VERCEL PROJECTS - THIS IS THE ARCHITECTURE
 
-**Target Production URL**: https://vendor.feedforward.ai
-- Documentation site: https://vendor.feedforward.ai/
-- Evaluation tool: https://vendor.feedforward.ai/evaluate
+**CRITICAL: WE HAVE TWO SEPARATE VERCEL PROJECTS, NOT ONE MONOREPO DEPLOYMENT**
 
-**Current Status**: Code ready for deployment. Builds passing. Awaiting Vercel domain configuration.
+**Project 1: Documentation Site**
+- Vercel Project: [NAME NEEDED]
+- Root Directory: `apps/docs`
+- Build Command: `npm run build`
+- Output Directory: `build`
+- URL: https://vendor.feedforward.ai/
+
+**Project 2: Evaluation Tool**
+- Vercel Project: [NAME NEEDED]
+- Root Directory: `apps/evaluation-tool`
+- Build Command: `npm run build`
+- Output Directory: `dist`
+- URL: https://vendor.feedforward.ai/evaluate (or separate domain)
+
+**Current Status**: Vercel projects need Root Directory configured in dashboard settings.
 
 ---
 
