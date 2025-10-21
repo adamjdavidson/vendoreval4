@@ -1,7 +1,7 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "buildCommand": "npm run build:all",
-  "installCommand": "npm install",
+  "buildCommand": "cd apps/docs && npm install && npm run build && cd ../evaluation-tool && npm install && npm run build",
+  "installCommand": "echo 'Dependencies installed in build command'",
   "rewrites": [
     {
       "source": "/evaluate/:path*",

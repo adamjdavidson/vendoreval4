@@ -51,6 +51,10 @@ const config: Config = {
     ],
   ],
 
+  plugins: [
+    './src/plugins/docusaurus-plugin-database-pages',
+  ],
+
   themeConfig: {
     // Replace with your project's social card
     image: 'img/docusaurus-social-card.jpg',
