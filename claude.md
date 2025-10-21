@@ -55,13 +55,21 @@ This project uses Spec-Driven Development with Beads for issue tracking. Follow 
    - Does current spec have `plan.md`?
    - Does current spec have `tasks.md`?
 
-4. **Report findings before suggesting any action**
+4. **CHECK IF VALIDATION IS REQUIRED:**
+   - Have you just completed a phase of work?
+   - Is there a "VALIDATE Phase X" task in Beads?
+   - If YES: **STOP and run validation tests BEFORE proceeding to next phase**
+   - If validation fails: **Fix issues before continuing**
+   - Validation tasks are MANDATORY BLOCKERS - cannot be skipped
 
-5. **NEVER skip SpecKit workflow steps:**
+5. **Report findings before suggesting any action**
+
+6. **NEVER skip SpecKit workflow steps:**
    - No "fast track" options
    - No "just build it" suggestions
    - No "we can skip X because Y exists"
-   - Always follow: constitution → specify → plan → tasks → implement
+   - Always follow: constitution → specify → plan → tasks → implement → **VALIDATE**
+   - Every phase MUST be validated before starting the next phase
 
 **If anything is missing from the workflow, start there. Do not proceed to later steps.**
 
@@ -107,6 +115,48 @@ context7:get-library-docs with context7CompatibleLibraryID
 - "Configure pytest for testing" → Use Context7 for pytest setup
 
 **Never guess at library APIs or configuration syntax when Context7 can provide accurate, up-to-date documentation.**
+
+---
+
+# AI Assistant Behavioral Rules
+
+**These rules apply to AI assistants working on this project. They define HOW to work, complementing the constitution which defines WHAT to build.**
+
+## Required Tools and Workflow
+
+### Use Context7 for Code Generation
+
+- **ALWAYS** use Context7 when generating code for React, Vite, Tailwind, jsPDF, or any external library
+- Never guess at library APIs or syntax
+- Verify API signatures and patterns against current documentation
+- Use Context7 to check for breaking changes between versions
+
+### Follow SpecKit Workflow Without Skipping Steps
+
+The mandatory workflow sequence is:
+
+1. Constitution → Define principles (.specify/memory/constitution.md)
+2. Specify → Define WHAT to build (specs/NNN-feature-name/spec.md)
+3. Plan → Define HOW to build (specs/NNN-feature-name/plan.md)
+4. Tasks → Break down implementation (specs/NNN-feature-name/tasks.md)
+5. Implement → Execute tasks systematically
+
+**Never suggest shortcuts or "fast track" options.** If a step is missing, start there.
+
+### Track All Work in Beads (No Markdown Todos)
+
+- Use Beads for issue tracking, NOT TodoWrite or markdown checklists
+- File discovered issues immediately: `bd create "Issue description" -t TYPE -p PRIORITY`
+- Update status as you work: `bd update ISSUE_ID --status in_progress`
+- Close completed work: `bd close ISSUE_ID --reason "Completion details"`
+- Link related work: `bd dep add FROM_ID TO_ID --type discovered-from`
+
+### Git Workflow Standards
+
+- **Meaningful commit messages**: Start with verb (Add, Fix, Update, Refactor)
+- **Feature branches**: Create from main, name as `NNN-feature-name` (SpecKit manages this)
+- **No force-push to main**: Revert mistakes, don't rewrite history
+- **Quality checks before commit**: Linting, type checking, tests must pass
 
 ---
 
@@ -431,6 +481,30 @@ This project uses **Beads** for issue tracking instead of Markdown todo lists. B
 ## Important Technical Note
 
 **Use bash commands for Beads, not MCP tools**, due to current environment issues with the MCP server. The bash commands are more reliable and provide full functionality.
+
+## Auto-Approved Beads Commands
+
+The following Beads commands should run without requiring user approval for each execution:
+
+```bash
+# Read-only commands (always safe)
+bd ready --json
+bd stats --json
+bd list --json
+bd list --status open --json
+bd list --status in_progress --json
+bd show * --json
+bd blocked --json
+bd dep tree *
+
+# Write commands for tracking work
+bd create * --json
+bd update * --json
+bd close * --json
+bd dep add * --type *
+```
+
+These commands are essential for the development workflow and should execute automatically without approval prompts.
 
 ---
 
