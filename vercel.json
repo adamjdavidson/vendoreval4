@@ -1,6 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "buildCommand": "cd $VERCEL_PROJECT_ROOT/apps/docs && npm install && npm run build && cd $VERCEL_PROJECT_ROOT/apps/evaluation-tool && npm install && npm run build",
+  "buildCommand": "npm run build:all",
   "installCommand": "npm install",
   "rewrites": [
     {
