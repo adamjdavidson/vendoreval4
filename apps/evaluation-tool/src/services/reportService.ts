@@ -33,7 +33,7 @@ class ReportService {
 
       // Check for partial evaluation
       const isPartial = categoryGrades.some(grade => {
-        const answeredQuestions = grade.yesCount + grade.noCount;
+        const answeredQuestions = grade.yesCount + grade.limitedCount + grade.noCount + grade.unknownCount;
         return answeredQuestions < grade.totalQuestions;
       });
 
@@ -153,36 +153,40 @@ class ReportService {
 
       // Count answers
       let yesCount = 0;
+      let limitedCount = 0;
       let noCount = 0;
       let unknownCount = 0;
 
       categoryQuestions.forEach(question => {
         const answer = request.answers[question.key];
         if (answer === 'yes') yesCount++;
+        else if (answer === 'limited') limitedCount++;
         else if (answer === 'no') noCount++;
-        else unknownCount++;
+        else if (answer === 'not-enough-info') unknownCount++;
       });
 
       const totalQuestions = categoryQuestions.length;
 
-      // Calculate grade based on yes percentage
+      // Calculate grade based on yes + partial credit for limited (0.5 weight)
       let grade: 'A' | 'B' | 'C' | 'D' | 'F' = 'F';
-      const yesPercentage = totalQuestions > 0 ? (yesCount / totalQuestions) * 100 : 0;
+      const weightedScore = yesCount + (limitedCount * 0.5);
+      const percentage = totalQuestions > 0 ? (weightedScore / totalQuestions) * 100 : 0;
 
-      if (yesPercentage >= 90) grade = 'A';
-      else if (yesPercentage >= 80) grade = 'B';
-      else if (yesPercentage >= 70) grade = 'C';
-      else if (yesPercentage >= 60) grade = 'D';
+      if (percentage >= 90) grade = 'A';
+      else if (percentage >= 80) grade = 'B';
+      else if (percentage >= 70) grade = 'C';
+      else if (percentage >= 60) grade = 'D';
       else grade = 'F';
 
       // Create user answer summary
-      const userAnswerSummary = `${yesCount} Yes, ${noCount} No, ${unknownCount} Not Enough Info`;
+      const userAnswerSummary = `${yesCount} Yes, ${limitedCount} Limited, ${noCount} No, ${unknownCount} Don't Know`;
 
       return {
         categoryKey: category.key,
         categoryName: category.name,
         grade,
         yesCount,
+        limitedCount,
         noCount,
         unknownCount,
         totalQuestions,

@@ -26,6 +26,7 @@ export interface CategoryAnalysis {
   categoryName: string;
   grade: Grade;
   yesCount: number;
+  limitedCount: number;
   noCount: number;
   unknownCount: number;
   totalQuestions: number;
