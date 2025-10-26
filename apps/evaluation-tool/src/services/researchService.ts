@@ -99,21 +99,18 @@ class ResearchService {
   }
 
   /**
-   * Search using Exa MCP (semantic search, quality-focused)
+   * Search using Exa API (semantic search, quality-focused)
    */
   private async searchWithExa(
     vendorName: string,
     categoryKey: CategoryKey,
-    // @ts-expect-error - Unused parameter, will be used in Phase 4
-    query: string
+    _query: string // Not used - Edge Function builds query
   ): Promise<ResearchFinding | null> {
-    // Call Edge Function for Exa search
-    const { data, error } = await supabase.functions.invoke('research-vendor', {
+    // Call Exa Search Edge Function
+    const { data, error } = await supabase.functions.invoke('exa-search', {
       body: {
         vendorName,
         categoryKey,
-        searchTerms: CATEGORY_SEARCH_TERMS[categoryKey],
-        compareServices: false, // Just use Exa
       },
     });
 
@@ -131,16 +128,13 @@ class ResearchService {
   private async searchWithBrave(
     vendorName: string,
     categoryKey: CategoryKey,
-    // @ts-expect-error - Unused parameter, will be used in Phase 4
-    query: string
+    _query: string // Not used - Edge Function builds query
   ): Promise<ResearchFinding | null> {
-    // Call Edge Function for Brave search (API key stored securely server-side)
-    const { data, error } = await supabase.functions.invoke('research-vendor', {
+    // Call Brave Search Edge Function
+    const { data, error } = await supabase.functions.invoke('brave-search', {
       body: {
         vendorName,
         categoryKey,
-        searchTerms: CATEGORY_SEARCH_TERMS[categoryKey],
-        compareServices: false, // Just use Brave
       },
     });
 

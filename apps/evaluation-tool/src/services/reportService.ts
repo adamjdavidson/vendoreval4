@@ -3,11 +3,14 @@
 
 import { supabase } from '../lib/supabase';
 import { reportStorage } from '../utils/reportStorage';
+import { researchService } from './researchService';
 import type {
   GeneratedReport,
   ReportGenerationRequest,
   CategoryAnalysis,
   StorageStats,
+  ResearchFinding,
+  CategoryKey,
 } from '@shared/types/report';
 
 class ReportService {
@@ -46,12 +49,35 @@ class ReportService {
         : 0;
       const completionStatus = `${totalAnswered}/${totalQuestions} questions answered (${completionPercentage}%)`;
 
-      // Step 2: Call Supabase Edge Function for AI-generated content (synthesis)
+      // Step 2: Optionally gather external research (Extended Report only)
+      let researchFindings: ResearchFinding[] = [];
+      let researchQueriesPerformed = 0;
+      let researchCacheHits = 0;
+
+      if (request.reportMode === 'extended' && request.includeResearch) {
+        console.log('[Report Service] Generating Extended Report with research...');
+        const categories: CategoryKey[] = ['see', 'change', 'use', 'adapt', 'leave', 'learn'];
+
+        try {
+          researchFindings = await researchService.researchVendor(
+            request.vendorName,
+            categories,
+            false // Production mode: use fallback strategy
+          );
+          researchQueriesPerformed = categories.length * 2; // 6 categories × 2 APIs
+          console.log(`[Report Service] Research complete: ${researchFindings.length} findings`);
+        } catch (error) {
+          console.error('[Report Service] Research failed:', error);
+          warnings.push('Some research queries failed. Report based on available information.');
+        }
+      }
+
+      // Step 3: Call Supabase Edge Function for AI-generated content (synthesis)
       const { data, error } = await supabase.functions.invoke('generate-report-content', {
         body: {
           vendorName: request.vendorName,
           categoryAnalyses: categoryGrades,
-          researchFindings: [], // Research will be added in Phase 4 (User Story 2)
+          researchFindings,
           voiceMode: request.voiceMode,
           userNotes: request.notes || {},
           evaluationDate: request.evaluationDate || new Date().toISOString().split('T')[0],
@@ -68,10 +94,10 @@ class ReportService {
         throw new Error('Invalid response from report generation service');
       }
 
-      // Step 3: Use AI-generated synthesis sections
+      // Step 4: Use AI-generated synthesis sections
       const categoryAnalyses = categoryGrades; // Category analyses remain from grading
 
-      // Step 4: Construct final report
+      // Step 5: Construct final report
       const report: GeneratedReport = {
         id: crypto.randomUUID(),
         evaluationId: request.evaluationId,
@@ -87,12 +113,12 @@ class ReportService {
         pros: data.pros || '',
         extended: data.extended || '',
         categoryAnalyses,
-        researchFindings: [], // Will be populated in Phase 4
+        researchFindings,
         metadata: {
           generationDurationMs: Date.now() - startTime,
           claudeTokensUsed: data.tokensUsed || 0,
-          researchQueriesPerformed: 0, // Phase 4
-          researchCacheHits: 0, // Phase 4
+          researchQueriesPerformed,
+          researchCacheHits,
           errors,
           warnings,
         },
