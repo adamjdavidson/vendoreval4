@@ -3,7 +3,7 @@
 
 import type { ResearchFinding, CategoryKey, CacheStats } from '@shared/types/report';
 
-const CACHE_VERSION = 'v2'; // Increment to invalidate all old cache entries
+const CACHE_VERSION = 'v3'; // Increment to invalidate all old cache entries
 const CACHE_PREFIX = `vendoreval:research:${CACHE_VERSION}:`;
 // @ts-expect-error - Unused constant, will be used in Phase 4
 const CACHE_TTL_MS = 7 * 24 * 60 * 60 * 1000; // 7 days

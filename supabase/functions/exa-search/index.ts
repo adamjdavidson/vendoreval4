@@ -179,15 +179,24 @@ Deno.serve(async (req) => {
 
     // Format as research finding
     const finding: ResearchFinding = {
-      findingText: topResults.map(r => r.title).join(' '), // Exa doesn't provide descriptions, use titles
+      categoryKey: categoryKey,
+      topic: CATEGORY_QUERY_TEMPLATES[categoryKey]?.[0] || categoryKey,
+      finding: topResults.map(r => r.title).join(' '), // Exa doesn't provide descriptions, use titles
       sources: topResults.map(r => ({
         title: r.title,
         url: r.url,
+        snippet: r.text,
         publishedDate: r.publishedDate || 'Unknown date',
         sourceType: 'exa' as const,
       })),
       confidence: topResults.length >= 3 ? 'high' : topResults.length >= 2 ? 'medium' : 'low',
-      category: categoryKey,
+      researchedAt: Date.now(),
+      cacheExpiresAt: Date.now() + (7 * 24 * 60 * 60 * 1000), // 7 days
+      sourceType: 'exa' as const,
+      sourceAge: topResults[0]?.publishedDate || 'Unknown',
+      ageMonths: topResults[0]?.ageInMonths || 999,
+      isFoundational: (topResults[0]?.ageInMonths || 0) > 12,
+      domainAuthority: 'medium' as const,
     };
 
     console.log(`[Exa Search] Found ${topResults.length} quality results (confidence: ${finding.confidence})`);
