@@ -91,8 +91,6 @@ export function EvaluatePage() {
   const updateAnswer = async (questionId: string, answer: AnswerValue, notes?: string) => {
     if (!evaluation) return;
 
-    console.log('[Evaluate] updateAnswer called:', { questionId, answer, notes });
-
     // Update local state immediately for responsive UI
     const updatedAnswers = evaluation.answers.filter((a) => a.question_id !== questionId);
     updatedAnswers.push({
@@ -102,18 +100,14 @@ export function EvaluatePage() {
       timestamp: new Date().toISOString(),
     });
 
-    console.log('[Evaluate] Updated answers array:', updatedAnswers);
-    console.log('[Evaluate] First answer structure:', JSON.stringify(updatedAnswers[0], null, 2));
-
     const updatedEvaluation = { ...evaluation, answers: updatedAnswers };
     setEvaluation(updatedEvaluation);
 
     // Save to database
     try {
-      const result = await databaseService.updateEvaluation(evaluation.id, updatedAnswers);
-      console.log('[Evaluate] Database update successful:', result);
+      await databaseService.updateEvaluation(evaluation.id, updatedAnswers);
     } catch (err) {
-      console.error('[Evaluate] Failed to save answer:', err);
+      console.error('Failed to save answer:', err);
       // Optionally show error to user
     }
   };
