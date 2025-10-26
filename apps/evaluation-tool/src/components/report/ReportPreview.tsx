@@ -32,6 +32,20 @@ export function ReportPreview({ report, onExportPDF, onClose }: ReportPreviewPro
     return text.split('\n').filter(line => line.trim() !== '');
   };
 
+  // Calculate age in months from published date
+  const calculateAgeMonths = (publishedDate: string): number => {
+    if (!publishedDate || publishedDate === 'Unknown date') return 999;
+
+    try {
+      const date = new Date(publishedDate);
+      const now = new Date();
+      const diffMs = now.getTime() - date.getTime();
+      return Math.floor(diffMs / (1000 * 60 * 60 * 24 * 30));
+    } catch {
+      return 999;
+    }
+  };
+
   // Determine if we have the new analytical format
   const hasAnalyticalFormat = report.cons || report.pros || report.extended;
 
@@ -207,6 +221,83 @@ export function ReportPreview({ report, onExportPDF, onClose }: ReportPreviewPro
           ))}
         </div>
       </div>
+
+      {/* Research Findings (Extended Report only) */}
+      {report.researchFindings && report.researchFindings.length > 0 && (
+        <div className="p-6 bg-gray-50 border-t border-gray-300">
+          <h3 className="text-xl font-bold text-gray-900 mb-2">Research Sources</h3>
+          <p className="text-sm text-gray-600 mb-6">
+            External sources consulted for this evaluation. Research findings are integrated into the analysis above.
+          </p>
+
+          <div className="space-y-6">
+            {report.researchFindings.map((finding, index) => (
+              <div key={index} className="bg-white rounded-md p-4 border border-gray-200">
+                <div className="flex items-start justify-between mb-2">
+                  <h4 className="text-sm font-bold text-gray-900 uppercase">
+                    {finding.category} Category
+                  </h4>
+                  <span
+                    className={`text-xs font-medium px-2 py-1 rounded ${
+                      finding.confidence === 'high'
+                        ? 'bg-green-100 text-green-800'
+                        : finding.confidence === 'medium'
+                        ? 'bg-yellow-100 text-yellow-800'
+                        : 'bg-gray-100 text-gray-800'
+                    }`}
+                  >
+                    {finding.confidence} confidence
+                  </span>
+                </div>
+
+                {finding.sources && finding.sources.length > 0 && (
+                  <div className="mt-3 space-y-2">
+                    {finding.sources.map((source, sourceIndex) => {
+                      const ageMonths = calculateAgeMonths(source.publishedDate);
+                      const isOld = ageMonths > 6;
+                      const isVeryOld = ageMonths > 12;
+
+                      return (
+                        <div key={sourceIndex} className="text-sm">
+                          <a
+                            href={source.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-600 hover:text-blue-800 hover:underline font-medium"
+                          >
+                            {source.title}
+                          </a>
+                          <div className="text-xs text-gray-500 mt-1 flex items-center gap-2">
+                            <span>{source.publishedDate}</span>
+                            <span>•</span>
+                            <span className="capitalize">{source.sourceType}</span>
+                            {isOld && (
+                              <>
+                                <span>•</span>
+                                <span className={isVeryOld ? 'text-orange-600 font-medium' : 'text-yellow-600'}>
+                                  {isVeryOld ? '⚠️ Source is ' : ''}
+                                  {ageMonths} months old
+                                  {isVeryOld ? ' (foundational)' : ''}
+                                </span>
+                              </>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+
+          {report.metadata.researchQueriesPerformed > 0 && (
+            <div className="mt-4 text-xs text-gray-500">
+              <p>Research performed: {report.metadata.researchQueriesPerformed} queries across Brave Search and Exa APIs</p>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Footer */}
       <div className="border-t border-gray-200 p-6 bg-white">

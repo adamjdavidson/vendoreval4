@@ -52,7 +52,7 @@ class ReportService {
       // Step 2: Optionally gather external research (Extended Report only)
       let researchFindings: ResearchFinding[] = [];
       let researchQueriesPerformed = 0;
-      let researchCacheHits = 0;
+      const researchCacheHits = 0; // TODO: Track cache hits in Phase 4
 
       if (request.reportMode === 'extended' && request.includeResearch) {
         console.log('[Report Service] Generating Extended Report with research...');
