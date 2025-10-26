@@ -235,7 +235,7 @@ export function ReportPreview({ report, onExportPDF, onClose }: ReportPreviewPro
               <div key={index} className="bg-white rounded-md p-4 border border-gray-200">
                 <div className="flex items-start justify-between mb-2">
                   <h4 className="text-sm font-bold text-gray-900 uppercase">
-                    {finding.category} Category
+                    {finding.categoryKey} Category
                   </h4>
                   <span
                     className={`text-xs font-medium px-2 py-1 rounded ${
@@ -253,7 +253,7 @@ export function ReportPreview({ report, onExportPDF, onClose }: ReportPreviewPro
                 {finding.sources && finding.sources.length > 0 && (
                   <div className="mt-3 space-y-2">
                     {finding.sources.map((source, sourceIndex) => {
-                      const ageMonths = calculateAgeMonths(source.publishedDate);
+                      const ageMonths = calculateAgeMonths(source.publishedDate || 'Unknown date');
                       const isOld = ageMonths > 6;
                       const isVeryOld = ageMonths > 12;
 
@@ -268,9 +268,13 @@ export function ReportPreview({ report, onExportPDF, onClose }: ReportPreviewPro
                             {source.title}
                           </a>
                           <div className="text-xs text-gray-500 mt-1 flex items-center gap-2">
-                            <span>{source.publishedDate}</span>
-                            <span>•</span>
-                            <span className="capitalize">{source.sourceType}</span>
+                            <span>{source.publishedDate || 'Unknown date'}</span>
+                            {source.sourceType && (
+                              <>
+                                <span>•</span>
+                                <span className="capitalize">{source.sourceType}</span>
+                              </>
+                            )}
                             {isOld && (
                               <>
                                 <span>•</span>

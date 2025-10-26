@@ -64,8 +64,9 @@ export interface ResearchFinding {
 export interface Source {
   url: string;
   title: string;
-  snippet: string;
+  snippet?: string; // Optional for Exa
   publishedDate?: string;
+  sourceType?: SourceType; // Which API provided this (brave/exa)
 }
 
 export interface ReportMetadata {
