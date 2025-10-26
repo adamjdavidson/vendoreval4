@@ -87,7 +87,9 @@ class ReportService {
       });
 
       if (error) {
-        throw new Error(`Report generation failed: ${error.message}`);
+        console.error('[Report Service] Edge Function error details:', error);
+        console.error('[Report Service] Edge Function data:', data);
+        throw new Error(`Report generation failed: ${error.message}${data?.error ? ` - ${data.error}` : ''}${data?.details ? ` (${data.details})` : ''}`);
       }
 
       if (!data || !data.headline) {

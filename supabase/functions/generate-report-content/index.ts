@@ -127,8 +127,14 @@ serve(async (req) => {
 
   } catch (error) {
     console.error('Report generation error:', error);
+    console.error('Error stack:', error.stack);
+    console.error('Error details:', JSON.stringify(error, Object.getOwnPropertyNames(error)));
     return new Response(
-      JSON.stringify({ error: error.message || 'Unknown error' }),
+      JSON.stringify({
+        error: error.message || 'Unknown error',
+        errorType: error.constructor.name,
+        details: error.toString()
+      }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }
