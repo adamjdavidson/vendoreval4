@@ -72,13 +72,6 @@ class ReportService {
       const categoryAnalyses = categoryGrades; // Category analyses remain from grading
 
       // Step 4: Construct final report
-      const completedCategories = categoryGrades
-        .filter(g => {
-          const answeredQuestions = g.yesCount + g.noCount;
-          return answeredQuestions > 0;
-        })
-        .map(g => g.categoryKey);
-
       const report: GeneratedReport = {
         id: crypto.randomUUID(),
         evaluationId: request.evaluationId,
