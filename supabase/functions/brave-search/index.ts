@@ -188,9 +188,27 @@ Deno.serve(async (req) => {
     };
 
     console.log(`[Brave Search] Found ${topResults.length} quality results (confidence: ${finding.confidence})`);
+    console.log(`[Brave Search] Returning finding with properties:`, Object.keys(finding));
+    console.log(`[Brave Search] categoryKey=${finding.categoryKey}, has 'finding' property=${'finding' in finding}, has 'findingText' property=${'findingText' in finding}`);
+
+    // EXPLICITLY construct response to ensure correct properties
+    const response = {
+      categoryKey: finding.categoryKey,
+      topic: finding.topic,
+      finding: finding.finding, // NOT findingText!
+      sources: finding.sources,
+      confidence: finding.confidence,
+      researchedAt: finding.researchedAt,
+      cacheExpiresAt: finding.cacheExpiresAt,
+      sourceType: finding.sourceType,
+      sourceAge: finding.sourceAge,
+      ageMonths: finding.ageMonths,
+      isFoundational: finding.isFoundational,
+      domainAuthority: finding.domainAuthority,
+    };
 
     return new Response(
-      JSON.stringify(finding),
+      JSON.stringify(response),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
 
