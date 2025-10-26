@@ -41,6 +41,8 @@ export function ReportGenerator({
         questions,
         categories,
         voiceMode,
+        evaluationDate: new Date().toISOString().split('T')[0],
+        reportMode: 'quick', // Quick report (no research) for MVP
         includeResearch: false, // Research will be enabled in Phase 4 (US2)
       });
 

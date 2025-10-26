@@ -104,6 +104,7 @@ class ResearchService {
   private async searchWithExa(
     vendorName: string,
     categoryKey: CategoryKey,
+    // @ts-expect-error - Unused parameter, will be used in Phase 4
     query: string
   ): Promise<ResearchFinding | null> {
     // Call Edge Function for Exa search
@@ -130,6 +131,7 @@ class ResearchService {
   private async searchWithBrave(
     vendorName: string,
     categoryKey: CategoryKey,
+    // @ts-expect-error - Unused parameter, will be used in Phase 4
     query: string
   ): Promise<ResearchFinding | null> {
     // Call Edge Function for Brave search (API key stored securely server-side)
@@ -183,6 +185,7 @@ class ResearchService {
    */
   private buildSearchQuery(
     vendorName: string,
+    // @ts-expect-error - Unused parameter, will be used in Phase 4
     categoryKey: CategoryKey,
     searchTerms: string[]
   ): string {
@@ -193,6 +196,7 @@ class ResearchService {
   /**
    * Calculate confidence level based on sources
    */
+  // @ts-expect-error - Unused method, will be used in Phase 4
   private calculateConfidence(sources: Source[], snippets: string[]): 'high' | 'medium' | 'low' {
     // High: Multiple consistent sources
     if (sources.length >= 3) return 'high';
@@ -208,7 +212,8 @@ class ResearchService {
   /**
    * Synthesize finding from snippets
    */
-  private synthesizeFinding(snippets: string[], categoryKey: CategoryKey): string {
+  // @ts-expect-error - Unused method, will be used in Phase 4
+  private synthesizeFinding(snippets: string[], _categoryKey: CategoryKey): string {
     // Join snippets and trim to 500 characters
     const combined = snippets
       .filter(s => s && s.length > 0)
@@ -226,6 +231,7 @@ class ResearchService {
   /**
    * Get human-readable topic for category
    */
+  // @ts-expect-error - Unused method, will be used in Phase 4
   private getCategoryTopic(categoryKey: CategoryKey): string {
     const topics: Record<CategoryKey, string> = {
       see: 'Transparency & Observability',
@@ -241,6 +247,7 @@ class ResearchService {
   /**
    * Format Brave age string to readable date
    */
+  // @ts-expect-error - Unused method, will be used in Phase 4
   private formatAge(age: string): string {
     // Brave returns age like "2025-10", "2 days ago", etc.
     return age;

@@ -80,6 +80,7 @@ export interface ReportMetadata {
 export interface ReportGenerationRequest {
   evaluationId: string;
   vendorName: string;
+  evaluationDate?: string; // ISO date string (YYYY-MM-DD)
   answers: Record<string, 'yes' | 'limited' | 'no' | 'not-enough-info'>;
   notes: Record<string, string>; // User notes by question key
   questions: Question[];

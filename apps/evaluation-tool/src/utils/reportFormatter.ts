@@ -20,7 +20,7 @@ export class ReportFormatter {
     // Partial evaluation warning
     if (report.isPartial) {
       text += `⚠️  WARNING: Partial Evaluation\n`;
-      text += `This report is based on incomplete answers. Only ${report.completedCategories.length} of 6 categories were evaluated.\n\n`;
+      text += `This report is based on incomplete answers. ${report.completionStatus || 'Not all questions were answered'}.\n\n`;
     }
 
     // Headline
@@ -149,7 +149,7 @@ export class ReportFormatter {
     // Partial evaluation warning
     if (report.isPartial) {
       md += `> ⚠️ **WARNING: Partial Evaluation**  \n`;
-      md += `> This report is based on incomplete answers. Only ${report.completedCategories.length} of 6 categories were evaluated.\n\n`;
+      md += `> This report is based on incomplete answers. ${report.completionStatus || 'Not all questions were answered'}.\n\n`;
     }
 
     // Headline

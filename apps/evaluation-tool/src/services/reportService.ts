@@ -203,33 +203,6 @@ class ReportService {
   }
 
   /**
-   * Merge calculated grades with AI-generated analyses
-   */
-  private mergeCategoryData(
-    calculatedGrades: CategoryAnalysis[],
-    aiAnalyses: Array<{ categoryKey: CategoryKey; analysisText: string; keyInsights: string[] }>
-  ): CategoryAnalysis[] {
-    return calculatedGrades.map(grade => {
-      const aiAnalysis = aiAnalyses.find(a => a.categoryKey === grade.categoryKey);
-
-      if (!aiAnalysis) {
-        console.warn(`No AI analysis found for category: ${grade.categoryKey}`);
-        return {
-          ...grade,
-          analysisText: 'Analysis unavailable',
-          keyInsights: [],
-        };
-      }
-
-      return {
-        ...grade,
-        analysisText: aiAnalysis.analysisText,
-        keyInsights: aiAnalysis.keyInsights,
-      };
-    });
-  }
-
-  /**
    * Get a report by ID
    */
   getReportById(id: string): GeneratedReport | null {
