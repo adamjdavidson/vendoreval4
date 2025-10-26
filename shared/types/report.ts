@@ -7,6 +7,8 @@ export type Grade = 'A' | 'B' | 'C' | 'D' | 'F';
 export type VoiceMode = 'no-bs' | 'corporate';
 export type Confidence = 'high' | 'medium' | 'low';
 
+export type ReportMode = 'quick' | 'extended';
+
 export interface GeneratedReport {
   id: string;
   evaluationId: string;
@@ -15,7 +17,8 @@ export interface GeneratedReport {
   generatedAt: number;
   voiceMode: VoiceMode;
   isPartial: boolean;
-  completionStatus: string; // e.g., "20/20 questions answered"
+  reportMode: ReportMode; // Quick=no research, Extended=with research
+  completionStatus: string; // e.g., "20/20 questions answered (100%)"
   headline: string;
   cons: string; // Summary of negatives and why they're concerning
   pros: string; // Summary of positives and why they matter
@@ -39,6 +42,9 @@ export interface CategoryAnalysis {
   keyInsights: string[];
 }
 
+export type SourceType = 'brave' | 'exa';
+export type DomainAuthority = 'official' | 'tech-news' | 'community' | 'github' | 'general';
+
 export interface ResearchFinding {
   categoryKey: CategoryKey;
   topic: string;
@@ -47,6 +53,12 @@ export interface ResearchFinding {
   confidence: Confidence;
   researchedAt: number;
   cacheExpiresAt: number;
+  // New fields for analytical format
+  sourceType: SourceType; // Which API provided this
+  sourceAge: string; // Human-readable: "2 months ago"
+  ageMonths: number; // Numeric age for filtering
+  isFoundational: boolean; // True if >12 months but foundational
+  domainAuthority: DomainAuthority;
 }
 
 export interface Source {
@@ -73,7 +85,18 @@ export interface ReportGenerationRequest {
   questions: Question[];
   categories: Category[];
   voiceMode: VoiceMode;
-  includeResearch: boolean;
+  reportMode: ReportMode; // Quick vs Extended
+  includeResearch: boolean; // Derived: reportMode === 'extended'
+}
+
+export interface ReportProgressUpdate {
+  phase: 'research' | 'synthesis' | 'complete';
+  currentCategory?: CategoryKey;
+  currentAPI?: SourceType;
+  progress: number; // 0-100
+  estimatedTimeRemaining: number; // Seconds
+  canCancel: boolean;
+  message: string; // e.g., "Researching See category via Brave..."
 }
 
 export interface Question {

@@ -28,8 +28,29 @@ export class ReportFormatter {
     text += `${'-'.repeat(60)}\n`;
     text += `${report.headline}\n\n`;
 
-    // Category analyses
-    text += `CATEGORY ANALYSES\n`;
+    // Cons (if exists - analytical format)
+    if (report.cons) {
+      text += `CONS (Why Concerning)\n`;
+      text += `${'-'.repeat(60)}\n`;
+      text += `${report.cons}\n\n`;
+    }
+
+    // Pros (if exists - analytical format)
+    if (report.pros) {
+      text += `PROS (Why They Matter)\n`;
+      text += `${'-'.repeat(60)}\n`;
+      text += `${report.pros}\n\n`;
+    }
+
+    // Extended (if exists - analytical format)
+    if (report.extended) {
+      text += `EXTENDED ANALYSIS\n`;
+      text += `${'-'.repeat(60)}\n`;
+      text += `${report.extended}\n\n`;
+    }
+
+    // Category analyses (now supporting detail)
+    text += `SUPPORTING DETAIL: CATEGORY ANALYSES\n`;
     text += `${'-'.repeat(60)}\n\n`;
 
     report.categoryAnalyses.forEach((analysis, index) => {
@@ -135,8 +156,26 @@ export class ReportFormatter {
     md += `## Headline\n\n`;
     md += `${report.headline}\n\n`;
 
-    // Category analyses
-    md += `## Category Analyses\n\n`;
+    // Cons (if exists - analytical format)
+    if (report.cons) {
+      md += `## Cons (Why Concerning)\n\n`;
+      md += `${report.cons}\n\n`;
+    }
+
+    // Pros (if exists - analytical format)
+    if (report.pros) {
+      md += `## Pros (Why They Matter)\n\n`;
+      md += `${report.pros}\n\n`;
+    }
+
+    // Extended (if exists - analytical format)
+    if (report.extended) {
+      md += `## Extended Analysis\n\n`;
+      md += `${report.extended}\n\n`;
+    }
+
+    // Category analyses (now supporting detail)
+    md += `## Supporting Detail: Category Analyses\n\n`;
 
     report.categoryAnalyses.forEach(analysis => {
       md += this.formatCategoryAnalysisMarkdown(analysis);

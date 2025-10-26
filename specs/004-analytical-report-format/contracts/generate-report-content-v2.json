@@ -1,0 +1,129 @@
+{
+  "name": "Generate Report Content (Analytical Format)",
+  "version": "2.0.0",
+  "endpoint": "/generate-report-content",
+  "method": "POST",
+  "description": "Generates Cons/Pros/Extended synthesis sections from category analyses and research findings",
+
+  "request": {
+    "vendorName": {
+      "type": "string",
+      "required": true,
+      "description": "Name of vendor being evaluated",
+      "example": "Glean"
+    },
+    "evaluationDate": {
+      "type": "string",
+      "required": true,
+      "format": "ISO 8601",
+      "description": "Date evaluation was completed",
+      "example": "2025-10-26"
+    },
+    "completionStatus": {
+      "type": "string",
+      "required": true,
+      "description": "Human-readable completion indicator",
+      "example": "20/20 questions answered (100%)"
+    },
+    "categoryAnalyses": {
+      "type": "CategoryAnalysis[]",
+      "required": true,
+      "description": "Existing category-by-category analyses (See, Change, Use, Adapt, Leave, Learn)"
+    },
+    "researchFindings": {
+      "type": "ResearchFinding[]",
+      "required": false,
+      "description": "External research from Brave + Exa (empty array for Quick Report)"
+    },
+    "userNotes": {
+      "type": "Record<string, string>",
+      "required": false,
+      "description": "User notes by question key for Extended section context"
+    },
+    "voiceMode": {
+      "type": "'no-bs' | 'corporate'",
+      "required": true,
+      "description": "Voice mode for synthesis"
+    }
+  },
+
+  "response": {
+    "headline": {
+      "type": "string",
+      "description": "1-2 sentence summary of evaluation",
+      "example": "Glean excels at transparency and integration but creates portability risks."
+    },
+    "cons": {
+      "type": "string",
+      "format": "Markdown",
+      "description": "Synthesized negatives across categories with business impact explanation"
+    },
+    "pros": {
+      "type": "string",
+      "format": "Markdown",
+      "description": "Synthesized positives across categories with business value explanation"
+    },
+    "extended": {
+      "type": "string",
+      "format": "Markdown",
+      "description": "Balanced analysis acknowledging trade-offs, no firm recommendation"
+    },
+    "categoryAnalyses": {
+      "type": "CategoryAnalysis[]",
+      "description": "Pass-through of input category analyses (unchanged)"
+    }
+  },
+
+  "errors": {
+    "400": {
+      "code": "INVALID_REQUEST",
+      "message": "Invalid request format",
+      "details": "Missing required field or invalid voice mode"
+    },
+    "429": {
+      "code": "RATE_LIMIT",
+      "message": "Rate limit exceeded",
+      "details": "Too many requests, retry after 60 seconds"
+    },
+    "500": {
+      "code": "AI_GENERATION_FAILED",
+      "message": "AI synthesis failed",
+      "details": "Claude API error or timeout"
+    },
+    "503": {
+      "code": "SERVICE_UNAVAILABLE",
+      "message": "Service temporarily unavailable",
+      "details": "Claude API is down, retry later"
+    }
+  },
+
+  "authentication": {
+    "type": "Supabase Auth",
+    "description": "Test mode allows anonymous access, production requires authenticated user"
+  },
+
+  "rateLimit": {
+    "requests": 100,
+    "period": "hour",
+    "description": "Per user/IP in production"
+  },
+
+  "examples": {
+    "quickReport": {
+      "request": {
+        "vendorName": "Glean",
+        "evaluationDate": "2025-10-26",
+        "completionStatus": "20/20 questions answered (100%)",
+        "categoryAnalyses": [],
+        "researchFindings": [],
+        "voiceMode": "no-bs"
+      },
+      "response": {
+        "headline": "Glean shows transparency but raises portability questions.",
+        "cons": "**Lock-in Risk**: Export options limited...",
+        "pros": "**Transparent**: Full prompt visibility...",
+        "extended": "Decision hinges on exit strategy..."
+      }
+    }
+  }
+}

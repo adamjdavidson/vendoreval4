@@ -1,0 +1,114 @@
+{
+  "name": "Brave Search Proxy",
+  "version": "1.0.0",
+  "endpoint": "/brave-search",
+  "method": "POST",
+  "description": "Proxy for Brave Search API with framework-focused query patterns",
+
+  "request": {
+    "vendorName": {
+      "type": "string",
+      "required": true,
+      "description": "Vendor name to research",
+      "example": "Glean"
+    },
+    "category": {
+      "type": "'See' | 'Change' | 'Use' | 'Adapt' | 'Leave' | 'Learn'",
+      "required": true,
+      "description": "Framework category to research"
+    },
+    "maxResults": {
+      "type": "number",
+      "required": false,
+      "default": 10,
+      "description": "Maximum results to return"
+    }
+  },
+
+  "response": {
+    "results": {
+      "type": "SearchResult[]",
+      "description": "Filtered and scored search results"
+    },
+    "query": {
+      "type": "string",
+      "description": "Actual query sent to Brave"
+    },
+    "cached": {
+      "type": "boolean",
+      "description": "True if results from cache (7-day TTL)"
+    }
+  },
+
+  "searchResult": {
+    "title": {
+      "type": "string",
+      "description": "Page title"
+    },
+    "url": {
+      "type": "string",
+      "description": "Full URL"
+    },
+    "description": {
+      "type": "string",
+      "description": "Snippet or description"
+    },
+    "publishedDate": {
+      "type": "string | null",
+      "description": "ISO date if available"
+    },
+    "sourceAge": {
+      "type": "string",
+      "description": "Human-readable age (e.g., '2 months ago')"
+    },
+    "ageMonths": {
+      "type": "number",
+      "description": "Numeric age in months"
+    },
+    "domainAuthority": {
+      "type": "'official' | 'tech-news' | 'community' | 'github' | 'general'",
+      "description": "Classified domain type"
+    },
+    "qualityScore": {
+      "type": "number",
+      "description": "0-100 score based on recency + domain authority"
+    }
+  },
+
+  "queryPatterns": {
+    "See": "{vendor} transparency OR prompt visibility OR model disclosure OR system prompts",
+    "Change": "{vendor} customization OR configuration OR API flexibility",
+    "Use": "{vendor} complexity OR learning curve OR user adoption OR ease of use",
+    "Adapt": "{vendor} integration OR API OR interoperability OR plugins",
+    "Leave": "{vendor} data export OR portability OR lock-in OR exit strategy",
+    "Learn": "{vendor} documentation OR tutorials OR skill transfer OR ecosystem"
+  },
+
+  "errors": {
+    "400": {
+      "code": "INVALID_REQUEST",
+      "message": "Invalid category or vendor name"
+    },
+    "429": {
+      "code": "BRAVE_RATE_LIMIT",
+      "message": "Brave API rate limit exceeded",
+      "retryAfter": 60
+    },
+    "500": {
+      "code": "BRAVE_API_ERROR",
+      "message": "Brave API returned error"
+    }
+  },
+
+  "authentication": {
+    "type": "Supabase Secret",
+    "key": "BRAVE_API_KEY",
+    "description": "Brave API key stored in Supabase secrets"
+  },
+
+  "caching": {
+    "strategy": "LocalStorage + Edge",
+    "ttl": "7 days",
+    "key": "vendoreval-research-{vendor}-{category}"
+  }
+}

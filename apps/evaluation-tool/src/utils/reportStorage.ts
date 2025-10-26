@@ -22,7 +22,7 @@ export class ReportStorage {
   }
 
   /**
-   * Get a report by ID
+   * Get a report by ID with backward compatibility
    */
   get(id: string): GeneratedReport | null {
     const key = `${STORAGE_PREFIX}${id}`;
@@ -30,11 +30,42 @@ export class ReportStorage {
     if (!data) return null;
 
     try {
-      return JSON.parse(data) as GeneratedReport;
+      const report = JSON.parse(data) as GeneratedReport;
+      return this.ensureBackwardCompatibility(report);
     } catch {
       console.error(`Failed to parse report ${id}`);
       return null;
     }
+  }
+
+  /**
+   * Ensure backward compatibility for reports without analytical format fields
+   * Feature: 004-analytical-report-format
+   */
+  private ensureBackwardCompatibility(report: GeneratedReport): GeneratedReport {
+    // If report doesn't have reportMode, it's an old report
+    if (!report.reportMode) {
+      report.reportMode = 'quick';
+    }
+
+    // If report doesn't have cons/pros/extended, add placeholders
+    if (!report.cons) {
+      report.cons = '(Generated before analytical format)';
+    }
+    if (!report.pros) {
+      report.pros = '(Generated before analytical format)';
+    }
+    if (!report.extended) {
+      report.extended = '(Generated before analytical format)';
+    }
+
+    // Ensure headline exists (use first part of first category analysis if missing)
+    if (!report.headline && report.categoryAnalyses.length > 0) {
+      const firstAnalysis = report.categoryAnalyses[0];
+      report.headline = firstAnalysis.analysisText.substring(0, 150) || 'Legacy report';
+    }
+
+    return report;
   }
 
   /**
