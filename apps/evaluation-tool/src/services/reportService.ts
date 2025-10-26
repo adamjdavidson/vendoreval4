@@ -73,6 +73,15 @@ class ReportService {
       }
 
       // Step 3: Call Supabase Edge Function for AI-generated content (synthesis)
+      console.log('[Report Service] Calling generate-report-content with:', {
+        vendorName: request.vendorName,
+        categoryAnalysesCount: categoryGrades.length,
+        researchFindingsCount: researchFindings.length,
+        researchFindingsSample: researchFindings[0],
+        voiceMode: request.voiceMode,
+        requestType: 'synthesis',
+      });
+
       const { data, error } = await supabase.functions.invoke('generate-report-content', {
         body: {
           vendorName: request.vendorName,
