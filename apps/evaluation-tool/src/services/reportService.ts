@@ -43,13 +43,25 @@ class ReportService {
         );
       }
 
-      // Step 2: Call Supabase Edge Function for AI-generated content
+      // Calculate completion status
+      const totalAnswered = Object.keys(request.answers).length;
+      const totalQuestions = request.questions.length;
+      const completionPercentage = totalQuestions > 0
+        ? Math.round((totalAnswered / totalQuestions) * 100)
+        : 0;
+      const completionStatus = `${totalAnswered}/${totalQuestions} questions answered (${completionPercentage}%)`;
+
+      // Step 2: Call Supabase Edge Function for AI-generated content (synthesis)
       const { data, error } = await supabase.functions.invoke('generate-report-content', {
         body: {
           vendorName: request.vendorName,
           categoryAnalyses: categoryGrades,
           researchFindings: [], // Research will be added in Phase 4 (User Story 2)
           voiceMode: request.voiceMode,
+          userNotes: request.notes || {},
+          evaluationDate: request.evaluationDate || new Date().toISOString().split('T')[0],
+          completionStatus,
+          requestType: 'synthesis', // Use new analytical format
         },
       });
 
@@ -57,12 +69,12 @@ class ReportService {
         throw new Error(`Report generation failed: ${error.message}`);
       }
 
-      if (!data || !data.headline || !data.categoryAnalyses) {
+      if (!data || !data.headline) {
         throw new Error('Invalid response from report generation service');
       }
 
-      // Step 3: Merge AI-generated analyses with calculated grades
-      const categoryAnalyses = this.mergeCategoryData(categoryGrades, data.categoryAnalyses);
+      // Step 3: Use AI-generated synthesis sections
+      const categoryAnalyses = categoryGrades; // Category analyses remain from grading
 
       // Step 4: Construct final report
       const completedCategories = categoryGrades
@@ -76,11 +88,16 @@ class ReportService {
         id: crypto.randomUUID(),
         evaluationId: request.evaluationId,
         vendorName: request.vendorName,
+        evaluationDate: request.evaluationDate || new Date().toISOString().split('T')[0],
         generatedAt: Date.now(),
         voiceMode: request.voiceMode,
         isPartial,
-        completedCategories,
+        reportMode: request.reportMode || 'quick',
+        completionStatus,
         headline: data.headline,
+        cons: data.cons || '',
+        pros: data.pros || '',
+        extended: data.extended || '',
         categoryAnalyses,
         researchFindings: [], // Will be populated in Phase 4
         metadata: {
