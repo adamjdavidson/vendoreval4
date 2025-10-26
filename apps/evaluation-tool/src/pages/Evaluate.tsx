@@ -21,8 +21,11 @@ import { Question } from '../components/evaluation/Question';
 import { CategoryBox } from '../components/evaluation/CategoryBox';
 import { ExportButton } from '../components/evaluation/ExportButton';
 import { Button } from '../components/shared/Button';
+import { ReportGenerator } from '../components/report/ReportGenerator';
+import { ReportPreview } from '../components/report/ReportPreview';
 import { calculateAllGrades, generateBottomLine, getOverallAssessmentColor } from '../utils/grading';
 import type { Evaluation, Category, Question as QuestionType, AnswerValue } from "@shared/types";
+import type { GeneratedReport } from '@shared/types/report';
 
 // Helper to convert null to undefined
 function nullToUndefined(value: string | null | undefined): string | undefined {
@@ -40,6 +43,7 @@ export function EvaluatePage() {
   const [questions, setQuestions] = useState<QuestionType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [generatedReport, setGeneratedReport] = useState<GeneratedReport | null>(null);
 
   // Load evaluation data
   useEffect(() => {
@@ -242,6 +246,42 @@ export function EvaluatePage() {
                 </div>
               );
             })()}
+          </section>
+        )}
+
+        {/* AI Report Generation Section - Show when 50%+ complete */}
+        {completionPercentage >= 50 && !generatedReport && (
+          <section className="mt-12 mb-8">
+            <ReportGenerator
+              evaluationId={evaluation.id}
+              vendorName={evaluation.vendor_name}
+              answers={evaluation.answers.reduce((acc, a) => {
+                acc[a.question_id] = a.answer as 'yes' | 'limited' | 'no' | 'not-enough-info';
+                return acc;
+              }, {} as Record<string, 'yes' | 'limited' | 'no' | 'not-enough-info'>)}
+              questions={questions.map(q => ({
+                key: q.key,
+                categoryKey: q.key.split('-')[0] as any, // Extract category from key (e.g., "see-1" -> "see")
+                text: voiceMode === 'no-bs' ? q.text_no_bs : q.text_corporate,
+                isCritical: q.is_critical,
+              }))}
+              categories={categories.map(c => ({
+                key: c.key as any,
+                name: voiceMode === 'no-bs' ? c.title_no_bs : c.title_corporate,
+                description: voiceMode === 'no-bs' ? c.subtitle_no_bs : c.subtitle_corporate,
+              }))}
+              onReportGenerated={(report) => setGeneratedReport(report)}
+            />
+          </section>
+        )}
+
+        {/* Show Generated Report */}
+        {generatedReport && (
+          <section className="mt-12 mb-8">
+            <ReportPreview
+              report={generatedReport}
+              onClose={() => setGeneratedReport(null)}
+            />
           </section>
         )}
 

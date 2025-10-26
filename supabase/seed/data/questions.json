@@ -153,8 +153,8 @@
     "key": "leave-2",
     "category_key": "leave",
     "order_index": 16,
-    "text_no_bs": "Will crucial organizational knowledge remain a capability of your company, or get locked into this tool?",
-    "text_corporate": "Will crucial organizational knowledge remain a capability of your company, or get locked into this tool?",
+    "text_no_bs": "Can you retain crucial organizational knowledge without it being locked into this tool?",
+    "text_corporate": "Can you retain crucial organizational knowledge without it being locked into this tool?",
     "is_critical": true,
     "help_text_no_bs": "The worst lock-in is when your team's expertise gets embedded in a vendor's tool. If critical knowledge only exists as prompts/workflows in their system, you lose capabilities if you leave. That's by design.\n\nGOOD: Knowledge stays with your team. Prompts and workflows are exportable and understandable. Using the tool builds transferable skills. You could recreate key workflows elsewhere if needed.\n\nBAD: Workflows only work in their system. Vendor holds your institutional knowledge hostage. Team becomes dependent on proprietary features. Leaving means losing organizational capabilities.\n\nASK: If we built significant workflows in your system, could we recreate them elsewhere? Do you use standard prompt/workflow formats? Would our team understand the exported configurations?",
     "help_text_corporate": "Organizations must ensure critical knowledge and capabilities remain independent of vendor platforms to maintain strategic flexibility and institutional resilience.\n\nGOOD: Platforms use transparent, standard approaches that enable organizations to document and transfer knowledge independently of the vendor.\n\nBAD: Platforms embed organizational knowledge in proprietary structures that cannot be easily extracted or recreated in alternative environments.\n\nASK: How is organizational knowledge represented? Can critical workflows and prompts be documented independently of your platform?"
@@ -193,8 +193,8 @@
     "key": "learn-3",
     "category_key": "learn",
     "order_index": 20,
-    "text_no_bs": "After 6 months, will power users have generalizable AI skills or just expertise in this one tool?",
-    "text_corporate": "After 6 months, will power users have generalizable AI skills or just expertise in this one tool?",
+    "text_no_bs": "After 6 months, will power users have generalizable AI skills (as opposed to just knowing this one tool)?",
+    "text_corporate": "After 6 months, will power users have generalizable AI skills (as opposed to just knowing this one tool)?",
     "is_critical": false,
     "help_text_no_bs": "Tool-specific expertise is worthless the moment you switch vendors. Real AI skills are valuable forever. Vendors sometimes deliberately make their tools \"unique\" to trap your team's knowledge.\n\nGOOD: Using the tool teaches prompt engineering, model selection, RAG patterns, etc. that apply anywhere. Team understands AI fundamentals. Skills are resume-worthy and transferable.\n\nBAD: Team only learns this vendor's specific interface and workflows. Knowledge is procedural (\"click here, then here\") not conceptual. Skills don't transfer or impress other employers.\n\nASK: What AI skills will our team develop using your tool? Are these skills transferable to other AI tools or building our own? Do you teach AI fundamentals or just your interface?",
     "help_text_corporate": "Team development should result in transferable AI capabilities that benefit both individual career development and organizational strategic flexibility.\n\nGOOD: Tools support development of fundamental AI skills including prompt engineering, model understanding, and architectural patterns applicable across platforms.\n\nBAD: Tools foster only vendor-specific procedural knowledge without building transferable understanding of underlying AI concepts and practices.\n\nASK: What skills will team members develop? How do these skills transfer beyond your platform?"

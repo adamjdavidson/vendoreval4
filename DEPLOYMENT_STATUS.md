@@ -18,39 +18,44 @@ GitHub: adamjdavidson/vendoreval4
         └─► Root Directory: apps/evaluation-tool
 ```
 
-### Project 1: Documentation Site
+### Project 1: Documentation Site ✅
 
-- **Vercel Project Name**: [TBD - check dashboard]
-- **Root Directory**: `apps/docs` ⚠️ MUST BE SET IN DASHBOARD
-- **Framework**: Docusaurus (auto-detect)
+- **Vercel Project Name**: vendoreval4-docs
+- **Root Directory**: `apps/docs` ✅ CONFIGURED
+- **Framework**: Docusaurus (auto-detected)
 - **Build Command**: `npm run build`
 - **Output Directory**: `build`
-- **Target URL**: https://vendor.feedforward.ai/
+- **Production URL**: https://vendoreval4-docs.vercel.app
+- **Build Status**: ✅ Deployed successfully (56s build time)
+- **Target Custom Domain**: https://vendor.feedforward.ai/ (not yet configured)
 
-### Project 2: Evaluation Tool
+### Project 2: Evaluation Tool ✅
 
-- **Vercel Project Name**: [TBD - check dashboard]
-- **Root Directory**: `apps/evaluation-tool` ⚠️ MUST BE SET IN DASHBOARD
-- **Framework**: Vite (auto-detect)
+- **Vercel Project Name**: vendoreval4
+- **Root Directory**: `apps/evaluation-tool` ✅ CONFIGURED
+- **Framework**: Vite (auto-detected)
 - **Build Command**: `npm run build`
 - **Output Directory**: `dist`
-- **Environment Variables**: `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`
-- **Target URL**: https://tool.vendor.feedforward.ai/ (or subdomain)
+- **Environment Variables**: `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY` ✅ CONFIGURED
+- **Production URL**: https://vendoreval4.vercel.app
+- **Build Status**: ✅ Deployed successfully (58s build time)
+- **Target Custom Domain**: https://tool.vendor.feedforward.ai/ (not yet configured)
 
-### Current Status
+### Current Status ✅ DEPLOYED
 
-**Blockers**:
-- ⚠️ Root Directory NOT configured in Vercel Dashboard (causing build failures)
-- ⚠️ Environment variables NOT set for evaluation-tool project
+**Both projects successfully deployed!**
 
-**Action Required**:
-1. Set Root Directory in Vercel Dashboard for BOTH projects
-2. Set environment variables for evaluation-tool project
-3. Trigger new deployments
+**Deployment Protection**: ⚠️ Currently enabled (requires Vercel authentication)
+
+**Next Steps**:
+1. Configure custom domain (vendor.feedforward.ai) - OPTIONAL
+2. Update Supabase CORS settings for production URLs
+3. Disable deployment protection OR configure custom domains
+4. End-to-end testing
 
 **See**: [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md) for complete step-by-step instructions
 
-**Beads Tasks Created**: vendoreval3-554 through vendoreval3-562
+**Beads Tasks**: vendoreval3-554 through vendoreval3-557 COMPLETE, vendoreval3-558 through vendoreval3-562 remaining
 
 ---
 

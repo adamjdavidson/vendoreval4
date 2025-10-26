@@ -12,6 +12,7 @@ interface CategoryGrade {
   category: Category;
   grade: Grade;
   yesCount: number;
+  limitedCount: number;
   noCount: number;
   unknownCount: number;
   total: number;
@@ -32,11 +33,13 @@ export function calculateCategoryGrade(
   );
 
   let yesCount = 0;
+  let limitedCount = 0;
   let noCount = 0;
   let unknownCount = 0;
 
   categoryAnswers.forEach(answer => {
     if (answer.answer === 'yes') yesCount++;
+    else if (answer.answer === 'limited') limitedCount++;
     else if (answer.answer === 'no') noCount++;
     else if (answer.answer === 'not-enough-info') unknownCount++;
   });
@@ -50,6 +53,7 @@ export function calculateCategoryGrade(
       category,
       grade: null,
       yesCount,
+      limitedCount,
       noCount,
       unknownCount,
       total,
@@ -57,8 +61,9 @@ export function calculateCategoryGrade(
     };
   }
 
-  // Calculate grade based on yes answers
-  const percentage = (yesCount / total) * 100;
+  // Calculate grade based on yes answers + partial credit for limited (0.5 weight)
+  const weightedScore = yesCount + (limitedCount * 0.5);
+  const percentage = (weightedScore / total) * 100;
 
   let grade: Grade;
   if (percentage >= 90) grade = 'A';
@@ -71,6 +76,7 @@ export function calculateCategoryGrade(
     category,
     grade,
     yesCount,
+    limitedCount,
     noCount,
     unknownCount,
     total,

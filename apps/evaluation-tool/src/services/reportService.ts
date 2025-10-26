@@ -1,0 +1,290 @@
+// Report Service: Orchestrates AI-powered report generation
+// Feature: 003-ai-report-generation
+
+import { supabase } from '../lib/supabase';
+import { calculateCategoryGrade } from '../utils/grading';
+import { reportStorage } from '../utils/reportStorage';
+import type {
+  GeneratedReport,
+  ReportGenerationRequest,
+  CategoryAnalysis,
+  ReportMetadata,
+  StorageStats,
+  Category,
+  Question,
+  CategoryKey,
+} from '@shared/types/report';
+
+class ReportService {
+  /**
+   * Generate a complete AI-powered report from user evaluation
+   */
+  async generateReport(request: ReportGenerationRequest): Promise<GeneratedReport> {
+    const startTime = Date.now();
+    const errors: string[] = [];
+    const warnings: string[] = [];
+
+    try {
+      // Validate request
+      this.validateRequest(request);
+
+      // Step 1: Calculate grades for all categories
+      const categoryGrades = this.calculateAllGrades(request);
+
+      // Check for partial evaluation
+      const isPartial = categoryGrades.some(grade => {
+        const answeredQuestions = grade.yesCount + grade.noCount;
+        return answeredQuestions < grade.totalQuestions;
+      });
+
+      if (isPartial) {
+        warnings.push(
+          'Partial evaluation detected. Report based on incomplete answers may be less accurate.'
+        );
+      }
+
+      // Step 2: Call Supabase Edge Function for AI-generated content
+      const { data, error } = await supabase.functions.invoke('generate-report-content', {
+        body: {
+          vendorName: request.vendorName,
+          categoryAnalyses: categoryGrades,
+          researchFindings: [], // Research will be added in Phase 4 (User Story 2)
+          voiceMode: request.voiceMode,
+        },
+      });
+
+      if (error) {
+        throw new Error(`Report generation failed: ${error.message}`);
+      }
+
+      if (!data || !data.headline || !data.categoryAnalyses) {
+        throw new Error('Invalid response from report generation service');
+      }
+
+      // Step 3: Merge AI-generated analyses with calculated grades
+      const categoryAnalyses = this.mergeCategoryData(categoryGrades, data.categoryAnalyses);
+
+      // Step 4: Construct final report
+      const completedCategories = categoryGrades
+        .filter(g => {
+          const answeredQuestions = g.yesCount + g.noCount;
+          return answeredQuestions > 0;
+        })
+        .map(g => g.categoryKey);
+
+      const report: GeneratedReport = {
+        id: crypto.randomUUID(),
+        evaluationId: request.evaluationId,
+        vendorName: request.vendorName,
+        generatedAt: Date.now(),
+        voiceMode: request.voiceMode,
+        isPartial,
+        completedCategories,
+        headline: data.headline,
+        categoryAnalyses,
+        researchFindings: [], // Will be populated in Phase 4
+        metadata: {
+          generationDurationMs: Date.now() - startTime,
+          claudeTokensUsed: data.tokensUsed || 0,
+          researchQueriesPerformed: 0, // Phase 4
+          researchCacheHits: 0, // Phase 4
+          errors,
+          warnings,
+        },
+      };
+
+      // Step 5: Save to LocalStorage
+      reportStorage.save(report);
+
+      return report;
+    } catch (error) {
+      // Handle specific error types
+      if (error instanceof Error) {
+        if (error.message.includes('timeout')) {
+          throw new APITimeoutError('Report generation timed out. Please try again.');
+        }
+        if (error.message.includes('quota')) {
+          throw new StorageQuotaError('Storage full. Please delete old reports.');
+        }
+        throw error;
+      }
+      throw new Error('Unknown error during report generation');
+    }
+  }
+
+  /**
+   * Validate report generation request
+   */
+  private validateRequest(request: ReportGenerationRequest): void {
+    if (!request.vendorName || request.vendorName.trim() === '') {
+      throw new ValidationError('Vendor name is required');
+    }
+
+    if (request.vendorName.length > 200) {
+      throw new ValidationError('Vendor name must be less than 200 characters');
+    }
+
+    if (!request.answers || Object.keys(request.answers).length === 0) {
+      throw new ValidationError('At least one question must be answered');
+    }
+
+    if (!request.questions || request.questions.length === 0) {
+      throw new ValidationError('Questions are required');
+    }
+
+    if (!request.categories || request.categories.length === 0) {
+      throw new ValidationError('Categories are required');
+    }
+
+    if (!['no-bs', 'corporate'].includes(request.voiceMode)) {
+      throw new ValidationError('Invalid voice mode. Must be "no-bs" or "corporate"');
+    }
+  }
+
+  /**
+   * Calculate grades for all categories
+   */
+  private calculateAllGrades(request: ReportGenerationRequest): CategoryAnalysis[] {
+    return request.categories.map(category => {
+      // Get questions for this category
+      const categoryQuestions = request.questions.filter(
+        q => q.categoryKey === category.key
+      );
+
+      // Count answers
+      let yesCount = 0;
+      let noCount = 0;
+      let unknownCount = 0;
+
+      categoryQuestions.forEach(question => {
+        const answer = request.answers[question.key];
+        if (answer === 'yes') yesCount++;
+        else if (answer === 'no') noCount++;
+        else unknownCount++;
+      });
+
+      const totalQuestions = categoryQuestions.length;
+
+      // Calculate grade based on yes percentage
+      let grade: 'A' | 'B' | 'C' | 'D' | 'F' = 'F';
+      const yesPercentage = totalQuestions > 0 ? (yesCount / totalQuestions) * 100 : 0;
+
+      if (yesPercentage >= 90) grade = 'A';
+      else if (yesPercentage >= 80) grade = 'B';
+      else if (yesPercentage >= 70) grade = 'C';
+      else if (yesPercentage >= 60) grade = 'D';
+      else grade = 'F';
+
+      // Create user answer summary
+      const userAnswerSummary = `${yesCount} Yes, ${noCount} No, ${unknownCount} Not Enough Info`;
+
+      return {
+        categoryKey: category.key,
+        categoryName: category.name,
+        grade,
+        yesCount,
+        noCount,
+        unknownCount,
+        totalQuestions,
+        userAnswerSummary,
+        analysisText: '', // Will be filled by AI
+        keyInsights: [], // Will be filled by AI
+      };
+    });
+  }
+
+  /**
+   * Merge calculated grades with AI-generated analyses
+   */
+  private mergeCategoryData(
+    calculatedGrades: CategoryAnalysis[],
+    aiAnalyses: Array<{ categoryKey: CategoryKey; analysisText: string; keyInsights: string[] }>
+  ): CategoryAnalysis[] {
+    return calculatedGrades.map(grade => {
+      const aiAnalysis = aiAnalyses.find(a => a.categoryKey === grade.categoryKey);
+
+      if (!aiAnalysis) {
+        console.warn(`No AI analysis found for category: ${grade.categoryKey}`);
+        return {
+          ...grade,
+          analysisText: 'Analysis unavailable',
+          keyInsights: [],
+        };
+      }
+
+      return {
+        ...grade,
+        analysisText: aiAnalysis.analysisText,
+        keyInsights: aiAnalysis.keyInsights,
+      };
+    });
+  }
+
+  /**
+   * Get a report by ID
+   */
+  getReportById(id: string): GeneratedReport | null {
+    return reportStorage.get(id);
+  }
+
+  /**
+   * List all reports (most recent first)
+   */
+  listReports(limit?: number): GeneratedReport[] {
+    return reportStorage.list(limit);
+  }
+
+  /**
+   * Delete a report
+   */
+  deleteReport(id: string): boolean {
+    return reportStorage.delete(id);
+  }
+
+  /**
+   * Get storage statistics
+   */
+  getStorageStats(): StorageStats & { percentUsed: number } {
+    const stats = reportStorage.getStats();
+
+    // Estimate browser storage limit (Safari: 5MB, others: 10MB+)
+    const estimatedLimit = 5 * 1024 * 1024; // Conservative 5MB
+    const percentUsed = Math.round((stats.totalSizeBytes / estimatedLimit) * 100);
+
+    return {
+      ...stats,
+      percentUsed: Math.min(percentUsed, 100), // Cap at 100%
+    };
+  }
+
+  /**
+   * Clean up old reports automatically
+   */
+  cleanupOldReports(maxAgeDays: number = 90): number {
+    return reportStorage.cleanupOldReports(maxAgeDays);
+  }
+}
+
+// Custom error classes
+export class ValidationError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'ValidationError';
+  }
+}
+
+export class APITimeoutError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'APITimeoutError';
+  }
+}
+
+export class StorageQuotaError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'StorageQuotaError';
+  }
+}
+
+export const reportService = new ReportService();

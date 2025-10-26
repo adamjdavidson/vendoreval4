@@ -14,8 +14,12 @@
 
 /**
  * Answer values for evaluation questions
+ * - yes: Full capability available
+ * - limited: Partial/restricted capability
+ * - no: Not available
+ * - not-enough-info: Insufficient information to determine
  */
-export type AnswerValue = 'yes' | 'no' | 'not-enough-info' | null;
+export type AnswerValue = 'yes' | 'limited' | 'no' | 'not-enough-info' | null;
 
 /**
  * Voice mode for content presentation
@@ -371,6 +375,7 @@ export type GenerateMarkdownFunction = (
 export function isAnswerValue(value: unknown): value is AnswerValue {
   return (
     value === 'yes' ||
+    value === 'limited' ||
     value === 'no' ||
     value === 'not-enough-info' ||
     value === null
