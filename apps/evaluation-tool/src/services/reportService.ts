@@ -1,18 +1,13 @@
 // Report Service: Orchestrates AI-powered report generation
-// Feature: 003-ai-report-generation
+// Feature: 004-analytical-report-format
 
 import { supabase } from '../lib/supabase';
-import { calculateCategoryGrade } from '../utils/grading';
 import { reportStorage } from '../utils/reportStorage';
 import type {
   GeneratedReport,
   ReportGenerationRequest,
   CategoryAnalysis,
-  ReportMetadata,
   StorageStats,
-  Category,
-  Question,
-  CategoryKey,
 } from '@shared/types/report';
 
 class ReportService {

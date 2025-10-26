@@ -168,7 +168,7 @@ export function ReportPreview({ report, onExportPDF, onClose }: ReportPreviewPro
         )}
 
         <div className="space-y-8">
-          {report.categoryAnalyses.map((analysis, index) => (
+          {report.categoryAnalyses.map((analysis) => (
             <div key={analysis.categoryKey} className="border-b border-gray-300 last:border-0 pb-8 last:pb-0">
               {/* Category header */}
               <div className="flex items-start justify-between mb-4">
