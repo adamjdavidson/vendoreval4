@@ -11,12 +11,16 @@ export interface GeneratedReport {
   id: string;
   evaluationId: string;
   vendorName: string;
+  evaluationDate: string; // ISO date string
   generatedAt: number;
   voiceMode: VoiceMode;
   isPartial: boolean;
-  completedCategories: CategoryKey[];
+  completionStatus: string; // e.g., "20/20 questions answered"
   headline: string;
-  categoryAnalyses: CategoryAnalysis[];
+  cons: string; // Summary of negatives and why they're concerning
+  pros: string; // Summary of positives and why they matter
+  extended: string; // How to think about the mix without firm recommendation
+  categoryAnalyses: CategoryAnalysis[]; // Detailed breakdown for reference
   researchFindings: ResearchFinding[];
   metadata: ReportMetadata;
 }
@@ -65,6 +69,7 @@ export interface ReportGenerationRequest {
   evaluationId: string;
   vendorName: string;
   answers: Record<string, 'yes' | 'limited' | 'no' | 'not-enough-info'>;
+  notes: Record<string, string>; // User notes by question key
   questions: Question[];
   categories: Category[];
   voiceMode: VoiceMode;

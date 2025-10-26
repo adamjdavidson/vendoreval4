@@ -300,6 +300,14 @@ export function EvaluatePage() {
                 }
                 return acc;
               }, {} as Record<string, 'yes' | 'limited' | 'no' | 'not-enough-info'>)}
+              notes={evaluation.answers.reduce((acc, a) => {
+                // Map question_id (UUID) to question.key and collect notes
+                const question = questions.find(q => q.id === a.question_id);
+                if (question && a.notes) {
+                  acc[question.key] = a.notes;
+                }
+                return acc;
+              }, {} as Record<string, string>)}
               questions={questions.map(q => ({
                 key: q.key,
                 categoryKey: q.key.split('-')[0] as any, // Extract category from key (e.g., "see-1" -> "see")

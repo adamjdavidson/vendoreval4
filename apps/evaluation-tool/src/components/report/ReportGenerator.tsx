@@ -9,6 +9,7 @@ interface ReportGeneratorProps {
   evaluationId: string;
   vendorName: string;
   answers: Record<string, 'yes' | 'limited' | 'no' | 'not-enough-info'>;
+  notes: Record<string, string>;
   questions: any[];
   categories: any[];
   onReportGenerated: (report: GeneratedReport) => void;
@@ -18,6 +19,7 @@ export function ReportGenerator({
   evaluationId,
   vendorName,
   answers,
+  notes,
   questions,
   categories,
   onReportGenerated,
@@ -35,6 +37,7 @@ export function ReportGenerator({
         evaluationId,
         vendorName,
         answers,
+        notes,
         questions,
         categories,
         voiceMode,
