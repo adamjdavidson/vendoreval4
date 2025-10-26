@@ -36,15 +36,24 @@ interface BraveSearchResponse {
 }
 
 interface ResearchFinding {
-  findingText: string;
+  categoryKey: string;
+  topic: string;
+  finding: string;
   sources: {
     title: string;
     url: string;
-    publishedDate: string;
+    snippet?: string;
+    publishedDate?: string;
     sourceType: 'brave';
   }[];
   confidence: 'high' | 'medium' | 'low';
-  category: string;
+  researchedAt: number;
+  cacheExpiresAt: number;
+  sourceType: 'brave';
+  sourceAge: string;
+  ageMonths: number;
+  isFoundational: boolean;
+  domainAuthority: 'high' | 'medium' | 'low';
 }
 
 Deno.serve(async (req) => {
@@ -158,15 +167,24 @@ Deno.serve(async (req) => {
 
     // Format as research finding
     const finding: ResearchFinding = {
-      findingText: topResults.map(r => r.description).join(' '),
+      categoryKey: categoryKey,
+      topic: CATEGORY_QUERY_TEMPLATES[categoryKey]?.[0] || categoryKey,
+      finding: topResults.map(r => r.description).join(' '),
       sources: topResults.map(r => ({
         title: r.title,
         url: r.url,
+        snippet: r.description,
         publishedDate: formatAge(r.age || r.page_age || ''),
         sourceType: 'brave' as const,
       })),
       confidence: topResults.length >= 3 ? 'high' : topResults.length >= 2 ? 'medium' : 'low',
-      category: categoryKey,
+      researchedAt: Date.now(),
+      cacheExpiresAt: Date.now() + (7 * 24 * 60 * 60 * 1000), // 7 days
+      sourceType: 'brave' as const,
+      sourceAge: topResults[0] ? formatAge(topResults[0].age || topResults[0].page_age || '') : 'Unknown',
+      ageMonths: topResults[0]?.ageInMonths || 999,
+      isFoundational: (topResults[0]?.ageInMonths || 0) > 12,
+      domainAuthority: 'medium' as const,
     };
 
     console.log(`[Brave Search] Found ${topResults.length} quality results (confidence: ${finding.confidence})`);
