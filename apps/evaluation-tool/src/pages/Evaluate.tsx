@@ -91,6 +91,8 @@ export function EvaluatePage() {
   const updateAnswer = async (questionId: string, answer: AnswerValue, notes?: string) => {
     if (!evaluation) return;
 
+    console.log('[Evaluate] updateAnswer called:', { questionId, answer, notes });
+
     // Update local state immediately for responsive UI
     const updatedAnswers = evaluation.answers.filter((a) => a.question_id !== questionId);
     updatedAnswers.push({
@@ -100,14 +102,17 @@ export function EvaluatePage() {
       timestamp: new Date().toISOString(),
     });
 
+    console.log('[Evaluate] Updated answers array:', updatedAnswers);
+
     const updatedEvaluation = { ...evaluation, answers: updatedAnswers };
     setEvaluation(updatedEvaluation);
 
     // Save to database
     try {
-      await databaseService.updateEvaluation(evaluation.id, updatedAnswers);
+      const result = await databaseService.updateEvaluation(evaluation.id, updatedAnswers);
+      console.log('[Evaluate] Database update successful:', result);
     } catch (err) {
-      console.error('Failed to save answer:', err);
+      console.error('[Evaluate] Failed to save answer:', err);
       // Optionally show error to user
     }
   };
@@ -132,7 +137,9 @@ export function EvaluatePage() {
     );
   }
 
-  const completionPercentage = Math.round((evaluation.answers.length / questions.length) * 100);
+  // Count answers that have a non-null value
+  const answeredCount = evaluation.answers.filter(a => a.answer !== null).length;
+  const completionPercentage = Math.round((answeredCount / questions.length) * 100);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -145,7 +152,7 @@ export function EvaluatePage() {
                 Simple evaluation questionnaire to ask the vendor salesperson
               </h1>
               <p className="text-sm text-gray-600 mt-0.5">
-                Evaluating: <span className="font-medium">{evaluation.vendor_name}</span> • {evaluation.answers.length}/{questions.length} questions answered ({completionPercentage}%)
+                Evaluating: <span className="font-medium">{evaluation.vendor_name}</span> • {answeredCount}/{questions.length} questions answered ({completionPercentage}%)
               </p>
             </div>
             <div className="flex items-center gap-3">
