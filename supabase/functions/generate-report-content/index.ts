@@ -1,10 +1,11 @@
 // Supabase Edge Function: Generate AI-powered report content using Claude API
 // Feature: 003-ai-report-generation
+// Feature: 004-analytical-report-format (synthesis)
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import Anthropic from 'npm:@anthropic-ai/sdk@0.27.0';
-import { NO_BS_SYSTEM_PROMPT, buildNoBSPrompt } from './prompts/no-bs.ts';
-import { CORPORATE_SYSTEM_PROMPT, buildCorporatePrompt } from './prompts/corporate.ts';
+import { NO_BS_SYSTEM_PROMPT, buildNoBSPrompt, buildNoBSSynthesisPrompt } from './prompts/no-bs.ts';
+import { CORPORATE_SYSTEM_PROMPT, buildCorporatePrompt, buildCorporateSynthesisPrompt } from './prompts/corporate.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -19,7 +20,16 @@ serve(async (req) => {
 
   try {
     // Parse request body
-    const { vendorName, categoryAnalyses, researchFindings, voiceMode } = await req.json();
+    const {
+      vendorName,
+      categoryAnalyses,
+      researchFindings,
+      voiceMode,
+      userNotes,
+      evaluationDate,
+      completionStatus,
+      requestType = 'synthesis' // 'synthesis' (new) or 'category' (legacy)
+    } = await req.json();
 
     // Validate required fields
     if (!vendorName || !categoryAnalyses || !voiceMode) {
@@ -41,12 +51,27 @@ serve(async (req) => {
 
     const anthropic = new Anthropic({ apiKey });
 
-    // Select voice mode prompts
+    // Select system prompt based on voice mode
     const systemPrompt = voiceMode === 'no-bs' ? NO_BS_SYSTEM_PROMPT : CORPORATE_SYSTEM_PROMPT;
-    const promptBuilder = voiceMode === 'no-bs' ? buildNoBSPrompt : buildCorporatePrompt;
 
-    // Construct prompt
-    const userPrompt = promptBuilder(vendorName, categoryAnalyses, researchFindings || []);
+    // Build user prompt based on request type
+    let userPrompt: string;
+    if (requestType === 'synthesis') {
+      // New analytical format: Cons/Pros/Extended synthesis
+      const synthesisBuilder = voiceMode === 'no-bs' ? buildNoBSSynthesisPrompt : buildCorporateSynthesisPrompt;
+      userPrompt = synthesisBuilder(
+        vendorName,
+        evaluationDate || new Date().toISOString().split('T')[0],
+        completionStatus || '20/20 questions answered (100%)',
+        categoryAnalyses,
+        researchFindings || [],
+        userNotes || {}
+      );
+    } else {
+      // Legacy format: Category analyses only
+      const promptBuilder = voiceMode === 'no-bs' ? buildNoBSPrompt : buildCorporatePrompt;
+      userPrompt = promptBuilder(vendorName, categoryAnalyses, researchFindings || []);
+    }
 
     // Call Claude API with prompt caching
     const message = await anthropic.messages.create({
@@ -74,15 +99,31 @@ serve(async (req) => {
 
     const parsedReport = JSON.parse(content);
 
-    // Return generated content
-    return new Response(
-      JSON.stringify({
-        headline: parsedReport.headline,
-        categoryAnalyses: parsedReport.categoryAnalyses,
-        tokensUsed: message.usage.input_tokens + message.usage.output_tokens,
-      }),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-    );
+    // Return generated content (format depends on request type)
+    if (requestType === 'synthesis') {
+      // New format with Cons/Pros/Extended
+      return new Response(
+        JSON.stringify({
+          headline: parsedReport.headline,
+          cons: parsedReport.cons || parsedReport.considerations || '', // Support both voice modes
+          pros: parsedReport.pros || parsedReport.strengths || '', // Support both voice modes
+          extended: parsedReport.extended || parsedReport.analysis || '', // Support both voice modes
+          categoryAnalyses: categoryAnalyses, // Pass through existing category analyses
+          tokensUsed: message.usage.input_tokens + message.usage.output_tokens,
+        }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    } else {
+      // Legacy format
+      return new Response(
+        JSON.stringify({
+          headline: parsedReport.headline,
+          categoryAnalyses: parsedReport.categoryAnalyses,
+          tokensUsed: message.usage.input_tokens + message.usage.output_tokens,
+        }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
 
   } catch (error) {
     console.error('Report generation error:', error);
