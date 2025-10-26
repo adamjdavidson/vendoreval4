@@ -103,6 +103,7 @@ export function EvaluatePage() {
     });
 
     console.log('[Evaluate] Updated answers array:', updatedAnswers);
+    console.log('[Evaluate] First answer structure:', JSON.stringify(updatedAnswers[0], null, 2));
 
     const updatedEvaluation = { ...evaluation, answers: updatedAnswers };
     setEvaluation(updatedEvaluation);
