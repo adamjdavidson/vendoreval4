@@ -3,7 +3,7 @@
 
 import { useState } from 'react';
 import { reportService, ValidationError, APITimeoutError, StorageQuotaError } from '../../services/reportService';
-import type { GeneratedReport, VoiceMode } from '@shared/types/report';
+import type { GeneratedReport, VoiceMode, ReportMode } from '@shared/types/report';
 
 interface ReportGeneratorProps {
   evaluationId: string;
@@ -26,6 +26,7 @@ export function ReportGenerator({
 }: ReportGeneratorProps) {
   const [generating, setGenerating] = useState(false);
   const [voiceMode, setVoiceMode] = useState<VoiceMode>('no-bs');
+  const [reportMode, setReportMode] = useState<ReportMode>('quick');
   const [error, setError] = useState<string | null>(null);
 
   const handleGenerate = async () => {
@@ -42,8 +43,8 @@ export function ReportGenerator({
         categories,
         voiceMode,
         evaluationDate: new Date().toISOString().split('T')[0],
-        reportMode: 'quick', // Quick report (no research) for MVP
-        includeResearch: false, // Research will be enabled in Phase 4 (US2)
+        reportMode,
+        includeResearch: reportMode === 'extended',
       });
 
       onReportGenerated(report);
@@ -93,6 +94,27 @@ export function ReportGenerator({
       </div>
 
       <div className="mb-6">
+        <label htmlFor="report-mode" className="block text-sm font-medium text-gray-700 mb-2">
+          Report Type
+        </label>
+        <select
+          id="report-mode"
+          value={reportMode}
+          onChange={(e) => setReportMode(e.target.value as ReportMode)}
+          disabled={generating}
+          className="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+        >
+          <option value="quick">Quick Report (~60 seconds) - Analysis only</option>
+          <option value="extended">Extended Report (~3-5 minutes) - With external research</option>
+        </select>
+        <p className="mt-2 text-sm text-gray-500">
+          {reportMode === 'quick'
+            ? '⚡ Fast synthesis based on your answers only'
+            : '🔍 In-depth analysis with research from Brave Search and Exa (requires API keys)'}
+        </p>
+      </div>
+
+      <div className="mb-6">
         <label htmlFor="voice-mode" className="block text-sm font-medium text-gray-700 mb-2">
           Voice Mode
         </label>
@@ -137,7 +159,9 @@ export function ReportGenerator({
 
       {generating && (
         <p className="mt-4 text-center text-sm text-gray-500">
-          This may take 10-30 seconds. Please don't close this page.
+          {reportMode === 'quick'
+            ? 'This may take 30-60 seconds. Please don\'t close this page.'
+            : 'Extended report generation takes 3-5 minutes. Please don\'t close this page.'}
         </p>
       )}
     </div>
