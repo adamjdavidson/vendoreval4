@@ -1,0 +1,12 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "cd apps/evaluation-tool && npm install && npm run build",
+  "outputDirectory": "apps/evaluation-tool/dist",
+  "installCommand": "npm install --prefix apps/evaluation-tool",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
