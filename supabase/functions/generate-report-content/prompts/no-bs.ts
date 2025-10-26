@@ -152,6 +152,120 @@ Return ONLY valid JSON (no markdown, no explanation):
 ❌ **NO hedging**: "may", "might", "could" - be direct
 ❌ **NO speculation**: Base analysis on user's answers + research only`;
 
+/**
+ * Build synthesis prompt for Cons/Pros/Extended sections
+ * Feature: 004-analytical-report-format
+ */
+export function buildNoBSSynthesisPrompt(
+  vendorName: string,
+  evaluationDate: string,
+  completionStatus: string,
+  categoryAnalyses: any[],
+  researchFindings: any[],
+  userNotes: Record<string, string>
+): string {
+  let prompt = `# Generate Executive Analytical Report\n\n`;
+  prompt += `**Vendor**: ${vendorName}\n`;
+  prompt += `**Evaluation Date**: ${evaluationDate}\n`;
+  prompt += `**Completion**: ${completionStatus}\n\n`;
+
+  // Add category analyses summary
+  prompt += `## Category Analyses Summary\n\n`;
+  categoryAnalyses.forEach((analysis) => {
+    prompt += `**${analysis.categoryName}** (Grade: ${analysis.grade})\n`;
+    prompt += `${analysis.analysisText}\n\n`;
+  });
+
+  // Add research findings if available
+  if (researchFindings.length > 0) {
+    prompt += `## External Research Findings\n\n`;
+    researchFindings.forEach((finding) => {
+      prompt += `**[${finding.categoryKey.toUpperCase()}]** ${finding.finding}\n`;
+      if (finding.sources && finding.sources.length > 0) {
+        prompt += `Source: ${finding.sources[0].title}\n`;
+      }
+      prompt += `\n`;
+    });
+  }
+
+  // Add user notes if available
+  const noteEntries = Object.entries(userNotes || {}).filter(([_, note]) => note.trim());
+  if (noteEntries.length > 0) {
+    prompt += `## User Notes (Additional Context)\n\n`;
+    noteEntries.forEach(([key, note]) => {
+      prompt += `- ${note}\n`;
+    });
+    prompt += `\n`;
+  }
+
+  prompt += `## Instructions\n\n`;
+  prompt += `Generate an executive-ready analytical report with three synthesized sections:\n\n`;
+
+  prompt += `### 1. CONS (Negatives & Why Concerning)\n`;
+  prompt += `Synthesize negative findings across ALL 6 categories into a coherent narrative.\n`;
+  prompt += `Use framework-aligned classification:\n`;
+  prompt += `- See: opacity/lack of transparency = negative\n`;
+  prompt += `- Change: rigidity/lack of customization = negative\n`;
+  prompt += `- Use: complexity/high learning curve = negative\n`;
+  prompt += `- Adapt: closed system/poor integration = negative\n`;
+  prompt += `- Leave: lock-in/poor portability = negative\n`;
+  prompt += `- Learn: proprietary knowledge/poor documentation = negative\n\n`;
+  prompt += `Explain WHY each negative is concerning from a business perspective:\n`;
+  prompt += `- Opacity → vendor lock-in, hidden costs, audit problems\n`;
+  prompt += `- Rigidity → can't adapt to workflows, wasted customization time\n`;
+  prompt += `- Complexity → low adoption, high training costs\n`;
+  prompt += `- Closed system → integration challenges, vendor dependency\n`;
+  prompt += `- Lock-in → exit costs, data loss risk, no negotiating power\n`;
+  prompt += `- Proprietary → team dependency, hiring challenges\n\n`;
+  prompt += `Format as Markdown. Use bold for key concerns. Be direct and specific.\n\n`;
+
+  prompt += `### 2. PROS (Positives & Why They Matter)\n`;
+  prompt += `Synthesize positive findings across ALL 6 categories into a coherent narrative.\n`;
+  prompt += `Use framework-aligned classification:\n`;
+  prompt += `- See: transparency/visibility = positive\n`;
+  prompt += `- Change: flexibility/customization = positive\n`;
+  prompt += `- Use: simplicity/easy adoption = positive\n`;
+  prompt += `- Adapt: integration flexibility/open APIs = positive\n`;
+  prompt += `- Leave: easy export/portability = positive\n`;
+  prompt += `- Learn: transferable skills/good docs = positive\n\n`;
+  prompt += `Explain WHY each positive matters and provides business value:\n`;
+  prompt += `- Transparency → trust, predictability, easier debugging\n`;
+  prompt += `- Flexibility → adapt to needs, faster customization\n`;
+  prompt += `- Simplicity → fast adoption, low training costs\n`;
+  prompt += `- Open → ecosystem benefits, easier integration\n`;
+  prompt += `- Portable → risk mitigation, vendor stays honest\n`;
+  prompt += `- Transferable → team resilience, easier hiring\n\n`;
+  prompt += `Format as Markdown. Use bold for key strengths. Be direct and specific.\n\n`;
+
+  prompt += `### 3. EXTENDED (Balanced Analysis)\n`;
+  prompt += `Present trade-offs between Cons and Pros WITHOUT offering a firm recommendation.\n`;
+  prompt += `Acknowledge:\n`;
+  prompt += `- When pros/cons are balanced and decision depends on organizational priorities\n`;
+  prompt += `- User notes that provide additional nuance (if any)\n`;
+  prompt += `- Research contradictions or gaps (if any)\n`;
+  prompt += `- Organizational factors that affect the decision\n\n`;
+  prompt += `DO NOT say "I recommend" or "you should" - keep it analytical and balanced.\n`;
+  prompt += `Format as Markdown. Use "No BS" voice: direct, candid, cuts through marketing speak.\n\n`;
+
+  prompt += `## Output Format\n\n`;
+  prompt += `Return ONLY valid JSON (no markdown, no explanation):\n\n`;
+  prompt += `\`\`\`json\n`;
+  prompt += `{\n`;
+  prompt += `  "headline": "1-2 sentence summary (No BS voice)",\n`;
+  prompt += `  "cons": "Markdown: synthesized negatives + why concerning",\n`;
+  prompt += `  "pros": "Markdown: synthesized positives + why they matter",\n`;
+  prompt += `  "extended": "Markdown: balanced analysis without firm recommendation"\n`;
+  prompt += `}\n`;
+  prompt += `\`\`\`\n\n`;
+  prompt += `Use direct, candid "No BS" language throughout. Be specific and actionable.`;
+
+  return prompt;
+}
+
+/**
+ * Original prompt builder for category analyses
+ * Feature: 003-ai-report-generation
+ */
 export function buildNoBSPrompt(
   vendorName: string,
   categoryAnalyses: any[],

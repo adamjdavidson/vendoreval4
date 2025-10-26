@@ -156,6 +156,120 @@ Return ONLY valid JSON (no markdown, no explanation):
 ❌ **NO inflammatory statements**: Maintain diplomatic tone
 ❌ **NO speculation**: Base analysis on provided data only`;
 
+/**
+ * Build synthesis prompt for Cons/Pros/Extended sections (Corporate voice)
+ * Feature: 004-analytical-report-format
+ */
+export function buildCorporateSynthesisPrompt(
+  vendorName: string,
+  evaluationDate: string,
+  completionStatus: string,
+  categoryAnalyses: any[],
+  researchFindings: any[],
+  userNotes: Record<string, string>
+): string {
+  let prompt = `# Generate Executive Strategic Assessment\n\n`;
+  prompt += `**Vendor Under Evaluation**: ${vendorName}\n`;
+  prompt += `**Assessment Date**: ${evaluationDate}\n`;
+  prompt += `**Completion Status**: ${completionStatus}\n\n`;
+
+  // Add category analyses summary
+  prompt += `## Category Assessment Summary\n\n`;
+  categoryAnalyses.forEach((analysis) => {
+    prompt += `**${analysis.categoryName}** (Grade: ${analysis.grade})\n`;
+    prompt += `${analysis.analysisText}\n\n`;
+  });
+
+  // Add research findings if available
+  if (researchFindings.length > 0) {
+    prompt += `## External Research Findings\n\n`;
+    researchFindings.forEach((finding) => {
+      prompt += `**[${finding.categoryKey.toUpperCase()}]** ${finding.finding}\n`;
+      if (finding.sources && finding.sources.length > 0) {
+        prompt += `Source: ${finding.sources[0].title}\n`;
+      }
+      prompt += `\n`;
+    });
+  }
+
+  // Add user notes if available
+  const noteEntries = Object.entries(userNotes || {}).filter(([_, note]) => note.trim());
+  if (noteEntries.length > 0) {
+    prompt += `## Evaluator Commentary (Additional Context)\n\n`;
+    noteEntries.forEach(([key, note]) => {
+      prompt += `- ${note}\n`;
+    });
+    prompt += `\n`;
+  }
+
+  prompt += `## Report Generation Requirements\n\n`;
+  prompt += `Generate an executive-level strategic assessment with three analytical sections:\n\n`;
+
+  prompt += `### 1. CONSIDERATIONS (Areas Requiring Attention)\n`;
+  prompt += `Synthesize findings across ALL 6 categories that warrant careful consideration.\n`;
+  prompt += `Use framework-aligned classification:\n`;
+  prompt += `- See: Limited transparency/visibility → governance and audit considerations\n`;
+  prompt += `- Change: Customization constraints → workflow adaptation requirements\n`;
+  prompt += `- Use: Implementation complexity → adoption timeline and training considerations\n`;
+  prompt += `- Adapt: Integration limitations → technical architecture implications\n`;
+  prompt += `- Leave: Data portability considerations → strategic risk management\n`;
+  prompt += `- Learn: Knowledge transfer requirements → organizational capability building\n\n`;
+  prompt += `Explain strategic implications for each consideration:\n`;
+  prompt += `- Limited transparency → oversight and compliance requirements\n`;
+  prompt += `- Customization constraints → process adaptation needs\n`;
+  prompt += `- Implementation complexity → resource allocation and timeline planning\n`;
+  prompt += `- Integration limitations → technical infrastructure assessment\n`;
+  prompt += `- Data portability → vendor relationship and exit strategy planning\n`;
+  prompt += `- Knowledge transfer → capability development and succession planning\n\n`;
+  prompt += `Format as Markdown. Use professional business language. Frame diplomatically.\n\n`;
+
+  prompt += `### 2. STRENGTHS (Strategic Advantages)\n`;
+  prompt += `Synthesize positive findings across ALL 6 categories that represent strategic value.\n`;
+  prompt += `Use framework-aligned classification:\n`;
+  prompt += `- See: Transparency/visibility → governance enablement\n`;
+  prompt += `- Change: Customization flexibility → strategic alignment\n`;
+  prompt += `- Use: Implementation simplicity → accelerated value realization\n`;
+  prompt += `- Adapt: Integration capabilities → technical ecosystem benefits\n`;
+  prompt += `- Leave: Data portability → strategic flexibility\n`;
+  prompt += `- Learn: Knowledge transferability → organizational resilience\n\n`;
+  prompt += `Explain strategic value and business benefits:\n`;
+  prompt += `- Transparency → effective governance and compliance assurance\n`;
+  prompt += `- Customization flexibility → organizational alignment and efficiency\n`;
+  prompt += `- Implementation simplicity → rapid deployment and adoption\n`;
+  prompt += `- Integration capabilities → seamless ecosystem connectivity\n`;
+  prompt += `- Data portability → strategic risk mitigation and vendor management\n`;
+  prompt += `- Knowledge transferability → sustainable capability development\n\n`;
+  prompt += `Format as Markdown. Use professional business language. Emphasize strategic value.\n\n`;
+
+  prompt += `### 3. STRATEGIC ANALYSIS (Balanced Assessment)\n`;
+  prompt += `Present balanced analysis of considerations and strengths WITHOUT providing prescriptive recommendations.\n`;
+  prompt += `Address:\n`;
+  prompt += `- Strategic trade-offs and organizational priorities that influence decision-making\n`;
+  prompt += `- Evaluator commentary that provides additional strategic context (if provided)\n`;
+  prompt += `- Research findings that warrant further investigation (if identified)\n`;
+  prompt += `- Organizational factors and strategic objectives that should inform the decision\n\n`;
+  prompt += `DO NOT provide direct recommendations such as "recommend proceeding" or "suggest avoiding" - maintain analytical objectivity.\n`;
+  prompt += `Format as Markdown. Use professional "Corporate" voice: formal, diplomatic, strategically focused.\n\n`;
+
+  prompt += `## Output Specification\n\n`;
+  prompt += `Return ONLY valid JSON (no markdown code blocks, no explanatory text):\n\n`;
+  prompt += `\`\`\`json\n`;
+  prompt += `{\n`;
+  prompt += `  "headline": "Professional 1-2 sentence executive summary (Corporate voice)",\n`;
+  prompt += `  "cons": "Markdown: synthesized considerations with strategic implications",\n`;
+  prompt += `  "pros": "Markdown: synthesized strengths with strategic value",\n`;
+  prompt += `  "extended": "Markdown: balanced strategic analysis without prescriptive recommendations"\n`;
+  prompt += `}\n`;
+  prompt += `\`\`\`\n\n`;
+  prompt += `Maintain professional, diplomatic "Corporate" language throughout. Focus on strategic implications and organizational considerations.`;
+
+  return prompt;
+}
+
+/**
+ * Original prompt builder for category analyses
+ * Feature: 003-ai-report-generation
+ */
 export function buildCorporatePrompt(
   vendorName: string,
   categoryAnalyses: any[],
