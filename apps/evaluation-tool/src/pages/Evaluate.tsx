@@ -170,6 +170,41 @@ export function EvaluatePage() {
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        {/* Answer Legend */}
+        <div className="mb-6 bg-gray-50 border border-gray-200 rounded-lg p-4">
+          <h3 className="text-sm font-semibold text-gray-900 mb-3">Answer Options:</h3>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs">
+            <div className="flex items-center gap-2">
+              <span className="text-lg">✅</span>
+              <div>
+                <div className="font-medium text-gray-900">Yes</div>
+                <div className="text-gray-600">Full capability</div>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-lg">⚠️</span>
+              <div>
+                <div className="font-medium text-gray-900">Limited</div>
+                <div className="text-gray-600">Partial/restricted</div>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-lg">❌</span>
+              <div>
+                <div className="font-medium text-gray-900">No</div>
+                <div className="text-gray-600">Not available</div>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-lg">❓</span>
+              <div>
+                <div className="font-medium text-gray-900">Don't Know</div>
+                <div className="text-gray-600">Insufficient info</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Questions by Category - Each category in a colored box */}
         <div className="space-y-6">
           {categories.map((category) => {

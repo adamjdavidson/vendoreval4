@@ -7,7 +7,7 @@
  */
 
 import { useState } from 'react';
-import { Check, X, HelpCircle } from 'lucide-react';
+import { Check, X, HelpCircle, AlertTriangle } from 'lucide-react';
 import type { Question as QuestionType, AnswerValue } from "@shared/types";
 import { useTone } from '../../hooks/useTone';
 import { HelpIcon } from '../shared/HelpIcon';
@@ -20,10 +20,11 @@ interface QuestionProps {
   onNoteChange?: (note: string) => void;
 }
 
-const answerOptions: { value: AnswerValue; label: string; icon: typeof Check }[] = [
-  { value: 'yes', label: 'Yes', icon: Check },
-  { value: 'no', label: 'No', icon: X },
-  { value: 'not-enough-info', label: 'Not Enough Info', icon: HelpCircle },
+const answerOptions: { value: AnswerValue; label: string; icon: typeof Check; emoji: string }[] = [
+  { value: 'yes', label: 'Yes', icon: Check, emoji: '✅' },
+  { value: 'limited', label: 'Limited', icon: AlertTriangle, emoji: '⚠️' },
+  { value: 'no', label: 'No', icon: X, emoji: '❌' },
+  { value: 'not-enough-info', label: "Don't Know", icon: HelpCircle, emoji: '❓' },
 ];
 
 export function Question({
@@ -45,6 +46,12 @@ export function Question({
       return isSelected
         ? `${baseClasses} bg-green-600 border-green-600 text-white focus:ring-green-500`
         : `${baseClasses} border-gray-300 text-gray-400 hover:border-green-500 hover:text-green-600 focus:ring-green-500`;
+    }
+
+    if (answerValue === 'limited') {
+      return isSelected
+        ? `${baseClasses} bg-yellow-600 border-yellow-600 text-white focus:ring-yellow-500`
+        : `${baseClasses} border-gray-300 text-gray-400 hover:border-yellow-500 hover:text-yellow-600 focus:ring-yellow-500`;
     }
 
     if (answerValue === 'no') {
