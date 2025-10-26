@@ -293,7 +293,11 @@ export function EvaluatePage() {
               evaluationId={evaluation.id}
               vendorName={evaluation.vendor_name}
               answers={evaluation.answers.reduce((acc, a) => {
-                acc[a.question_id] = a.answer as 'yes' | 'limited' | 'no' | 'not-enough-info';
+                // Map question_id (UUID) to question.key (e.g., "see-1")
+                const question = questions.find(q => q.id === a.question_id);
+                if (question) {
+                  acc[question.key] = a.answer as 'yes' | 'limited' | 'no' | 'not-enough-info';
+                }
                 return acc;
               }, {} as Record<string, 'yes' | 'limited' | 'no' | 'not-enough-info'>)}
               questions={questions.map(q => ({
