@@ -1,5 +1,6 @@
 // Brave Search Edge Function
 // Feature: 004-analytical-report-format (Phase 4 - Extended Report with Research)
+// Updated: 005-ai-research-pipeline (Phase 2 - Added resultCount parameter for broader search)
 // Purpose: Search for vendor information using Brave Search API
 
 import { corsHeaders } from '../_shared/cors.ts';
@@ -19,6 +20,7 @@ const CATEGORY_QUERY_TEMPLATES: Record<string, string[]> = {
 interface BraveSearchRequest {
   vendorName: string;
   categoryKey: string;
+  resultCount?: number;  // Optional: 5-50, defaults to 5 for backward compatibility
 }
 
 interface BraveWebResult {
@@ -70,7 +72,7 @@ Deno.serve(async (req) => {
     }
 
     // Parse request
-    const { vendorName, categoryKey }: BraveSearchRequest = await req.json();
+    const { vendorName, categoryKey, resultCount = 5 }: BraveSearchRequest = await req.json();
 
     if (!vendorName || !categoryKey) {
       return new Response(
@@ -79,10 +81,15 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Build search query
+    // Validate and clamp resultCount (5-50)
+    const requestedCount = Math.max(5, Math.min(50, resultCount));
+
+    // Build search query with AI context to disambiguate
     const queryTerms = CATEGORY_QUERY_TEMPLATES[categoryKey] || [];
     const primaryTerms = queryTerms.slice(0, 3).join(' OR ');
-    const searchQuery = `${vendorName} ${primaryTerms}`;
+    // Add "AI" or "artificial intelligence" to disambiguate vendor names
+    // e.g., "jasper AI" instead of just "jasper" to avoid unrelated results
+    const searchQuery = `"${vendorName}" (AI OR "artificial intelligence" OR LLM) ${primaryTerms}`;
 
     console.log(`[Brave Search] Query: ${searchQuery} (category: ${categoryKey})`);
 
@@ -95,7 +102,7 @@ Deno.serve(async (req) => {
       try {
         const url = new URL(BRAVE_API_URL);
         url.searchParams.set('q', searchQuery);
-        url.searchParams.set('count', '10');
+        url.searchParams.set('count', requestedCount.toString());
         url.searchParams.set('freshness', 'pm'); // Last month
         url.searchParams.set('text_decorations', 'false');
 
@@ -147,7 +154,7 @@ Deno.serve(async (req) => {
       }
 
       // Recency scoring
-      const ageInMonths = parseAge(result.age || result.page_age);
+      const ageInMonths = parseAge(result.age || result.page_age || '');
       if (ageInMonths <= 6) {
         qualityScore += 2; // Recent
       } else if (ageInMonths <= 12) {
@@ -163,7 +170,7 @@ Deno.serve(async (req) => {
     const topResults = scoredResults
       .filter(r => r.qualityScore > 0)
       .sort((a, b) => b.qualityScore - a.qualityScore)
-      .slice(0, 5);
+      .slice(0, requestedCount);
 
     // Format as research finding
     const finding: ResearchFinding = {
@@ -214,8 +221,9 @@ Deno.serve(async (req) => {
 
   } catch (error) {
     console.error('[Brave Search] Error:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Internal server error';
     return new Response(
-      JSON.stringify({ error: error.message || 'Internal server error' }),
+      JSON.stringify({ error: errorMessage }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }

@@ -1,0 +1,180 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Fetch Article Content API",
+    "version": "1.0.0",
+    "description": "Supabase Edge Function that fetches and extracts full text content from web articles"
+  },
+  "servers": [
+    {
+      "url": "https://leicgzljnodyrdbbcgoq.supabase.co/functions/v1",
+      "description": "Supabase Edge Functions"
+    }
+  ],
+  "paths": {
+    "/fetch-article-content": {
+      "post": {
+        "summary": "Fetch and extract article content",
+        "description": "Fetches HTML and extracts clean text content using Mozilla Readability",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FetchRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully fetched content",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FetchResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "FetchRequest": {
+        "type": "object",
+        "required": ["urls"],
+        "properties": {
+          "urls": {
+            "type": "array",
+            "description": "URLs to fetch (20-50 articles)",
+            "minItems": 1,
+            "maxItems": 100,
+            "items": {
+              "type": "string",
+              "format": "uri"
+            }
+          },
+          "batchSize": {
+            "type": "integer",
+            "default": 10,
+            "description": "Process in batches to manage memory"
+          }
+        }
+      },
+      "FetchResponse": {
+        "type": "object",
+        "required": ["articles", "metadata"],
+        "properties": {
+          "articles": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ArticleContent"
+            }
+          },
+          "metadata": {
+            "type": "object",
+            "properties": {
+              "totalRequested": {
+                "type": "integer"
+              },
+              "successCount": {
+                "type": "integer"
+              },
+              "failedCount": {
+                "type": "integer"
+              },
+              "skippedCount": {
+                "type": "integer"
+              },
+              "processingTimeMs": {
+                "type": "integer"
+              }
+            }
+          }
+        }
+      },
+      "ArticleContent": {
+        "type": "object",
+        "required": ["url", "title", "textContent", "wordCount", "fetchStatus", "fetchedAt", "extractionMethod"],
+        "properties": {
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "title": {
+            "type": "string"
+          },
+          "author": {
+            "type": "string"
+          },
+          "publishedDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "textContent": {
+            "type": "string",
+            "description": "Full extracted text"
+          },
+          "excerpt": {
+            "type": "string"
+          },
+          "wordCount": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "fetchStatus": {
+            "type": "string",
+            "enum": ["success", "failed", "skipped"]
+          },
+          "fetchError": {
+            "type": "string",
+            "description": "Error message if fetchStatus != success"
+          },
+          "fetchedAt": {
+            "type": "integer",
+            "description": "Unix timestamp"
+          },
+          "extractionMethod": {
+            "type": "string",
+            "enum": ["readability", "cheerio", "fallback"]
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "required": ["error"],
+        "properties": {
+          "error": {
+            "type": "string"
+          },
+          "details": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

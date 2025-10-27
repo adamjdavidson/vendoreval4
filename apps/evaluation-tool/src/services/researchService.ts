@@ -1,9 +1,12 @@
 // Research Service: External research using Exa MCP and Brave Search via Edge Function
 // Feature: 003-ai-report-generation
+// Updated: 005-ai-research-pipeline (Phase 3 - Added AI relevance filtering)
 
 import { supabase } from '../lib/supabase';
 import { cacheManager } from '../utils/cacheManager';
+import { filterSearchResults } from './filterService';
 import type { ResearchFinding, CategoryKey, Source } from '@shared/types/report';
+import type { SearchResult } from '../types/research';
 
 // Category-specific search terms
 const CATEGORY_SEARCH_TERMS: Record<CategoryKey, string[]> = {
@@ -38,6 +41,7 @@ class ResearchService {
 
   /**
    * Research a specific category for a vendor
+   * Phase 3: Integrates AI relevance filtering
    */
   async researchCategory(
     vendorName: string,
@@ -76,7 +80,7 @@ class ResearchService {
 
       finding = this.selectBestFinding(exaFinding, braveFinding);
     } else {
-      // PRODUCTION MODE: Use tiered fallback strategy
+      // PRODUCTION MODE: Use tiered fallback strategy with AI filtering
       try {
         finding = await this.searchWithExa(vendorName, categoryKey, query);
       } catch (error) {
@@ -87,6 +91,49 @@ class ResearchService {
           console.error('[Research] Both Exa and Brave failed:', braveError);
           return null;
         }
+      }
+    }
+
+    // Phase 3: Apply AI relevance filtering if we have results
+    if (finding && finding.sources.length > 0) {
+      try {
+        console.log(`[Research] Applying AI filtering to ${finding.sources.length} results for ${categoryKey}`);
+
+        // Convert ResearchFinding.sources to SearchResult[]
+        const searchResults: SearchResult[] = finding.sources
+          .filter(source => source.sourceType === 'brave' || source.sourceType === 'exa')
+          .map(source => ({
+            title: source.title,
+            url: source.url,
+            snippet: source.snippet || '',
+            publishedDate: source.publishedDate,
+            sourceType: source.sourceType as 'brave' | 'exa',
+            score: undefined,
+          }));
+
+        // Apply AI filtering
+        const filterResponse = await filterSearchResults(vendorName, categoryKey, searchResults);
+
+        console.log(`[Research] Filtered ${searchResults.length} → ${filterResponse.filteredResults.length} results`);
+        console.log(`[Research] Avg relevance score: ${filterResponse.metadata.averageRelevanceScore}`);
+
+        // Update finding with filtered sources
+        if (filterResponse.filteredResults.length > 0) {
+          finding.sources = filterResponse.filteredResults.map(filtered => ({
+            title: filtered.title,
+            url: filtered.url,
+            snippet: filtered.snippet,
+            publishedDate: filtered.publishedDate,
+            sourceType: filtered.sourceType,
+          }));
+        } else {
+          // All results filtered out - return null to indicate no relevant findings
+          console.warn('[Research] All results filtered out as irrelevant');
+          return null;
+        }
+      } catch (filterError) {
+        console.error('[Research] AI filtering failed, using unfiltered results:', filterError);
+        // Continue with unfiltered results on filtering failure
       }
     }
 

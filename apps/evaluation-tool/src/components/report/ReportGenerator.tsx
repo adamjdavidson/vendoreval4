@@ -1,5 +1,6 @@
 // Report Generator Component
 // Feature: 003-ai-report-generation
+// Updated: 005-ai-research-pipeline (Phase 3 - Added filtering progress indicators)
 
 import { useState } from 'react';
 import { reportService, ValidationError, APITimeoutError, StorageQuotaError } from '../../services/reportService';
@@ -28,12 +29,21 @@ export function ReportGenerator({
   const [voiceMode, setVoiceMode] = useState<VoiceMode>('no-bs');
   const [reportMode, setReportMode] = useState<ReportMode>('quick');
   const [error, setError] = useState<string | null>(null);
+  const [progress, setProgress] = useState<string>('');
 
   const handleGenerate = async () => {
     setGenerating(true);
     setError(null);
+    setProgress('');
 
     try {
+      // Show progress for extended reports with research
+      if (reportMode === 'extended') {
+        setProgress('Gathering research from multiple sources...');
+        setTimeout(() => setProgress('Filtering results for relevance with AI...'), 2000);
+        setTimeout(() => setProgress('Synthesizing findings into report...'), 8000);
+      }
+
       const report = await reportService.generateReport({
         evaluationId,
         vendorName,
@@ -63,6 +73,7 @@ export function ReportGenerator({
       console.error('Report generation error:', err);
     } finally {
       setGenerating(false);
+      setProgress('');
     }
   };
 
@@ -158,11 +169,20 @@ export function ReportGenerator({
       </button>
 
       {generating && (
-        <p className="mt-4 text-center text-sm text-gray-500">
-          {reportMode === 'quick'
-            ? 'This may take 30-60 seconds. Please don\'t close this page.'
-            : 'Extended report generation takes 3-5 minutes. Please don\'t close this page.'}
-        </p>
+        <div className="mt-4 space-y-2">
+          <p className="text-center text-sm text-gray-500">
+            {reportMode === 'quick'
+              ? 'This may take 30-60 seconds. Please don\'t close this page.'
+              : 'Extended report generation takes 3-5 minutes. Please don\'t close this page.'}
+          </p>
+          {progress && (
+            <div className="bg-blue-50 border border-blue-200 rounded-md p-3">
+              <p className="text-blue-800 text-sm text-center">
+                🔄 {progress}
+              </p>
+            </div>
+          )}
+        </div>
       )}
     </div>
   );

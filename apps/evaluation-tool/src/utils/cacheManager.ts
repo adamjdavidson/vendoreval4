@@ -1,9 +1,10 @@
 // Cache management utilities for research findings
 // Feature: 003-ai-report-generation
+// Updated: 005-ai-research-pipeline (Phase 2 - Bumped to v5 for new pipeline data structures)
 
 import type { ResearchFinding, CategoryKey, CacheStats } from '@shared/types/report';
 
-const CACHE_VERSION = 'v3'; // Increment to invalidate all old cache entries
+const CACHE_VERSION = 'v5'; // Increment to invalidate all old cache entries
 const CACHE_PREFIX = `vendoreval:research:${CACHE_VERSION}:`;
 // @ts-expect-error - Unused constant, will be used in Phase 4
 const CACHE_TTL_MS = 7 * 24 * 60 * 60 * 1000; // 7 days

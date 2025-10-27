@@ -1,0 +1,219 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Filter Research Results API",
+    "version": "1.0.0",
+    "description": "Supabase Edge Function that uses Gemini Flash to filter search results for relevance to target vendor"
+  },
+  "servers": [
+    {
+      "url": "https://leicgzljnodyrdbbcgoq.supabase.co/functions/v1",
+      "description": "Supabase Edge Functions"
+    }
+  ],
+  "paths": {
+    "/filter-research-results": {
+      "post": {
+        "summary": "Filter search results using Gemini AI",
+        "description": "Takes 240-300 search results and user context, returns 30-50 filtered relevant results about the specific vendor",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FilterRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully filtered results",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FilterResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "FilterRequest": {
+        "type": "object",
+        "required": ["vendorName", "searchResults", "userAnswers"],
+        "properties": {
+          "vendorName": {
+            "type": "string",
+            "description": "Name of vendor being evaluated",
+            "example": "Jasper"
+          },
+          "searchResults": {
+            "type": "array",
+            "description": "All search results from Stage 1 (240-300 results)",
+            "minItems": 1,
+            "maxItems": 500,
+            "items": {
+              "$ref": "#/components/schemas/SearchResult"
+            }
+          },
+          "userAnswers": {
+            "type": "object",
+            "description": "User's answers to evaluation questions for context",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/Answer"
+            }
+          }
+        }
+      },
+      "SearchResult": {
+        "type": "object",
+        "required": ["title", "url", "snippet", "sourceType"],
+        "properties": {
+          "title": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "snippet": {
+            "type": "string",
+            "maxLength": 1000
+          },
+          "publishedDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "sourceType": {
+            "type": "string",
+            "enum": ["brave", "exa"]
+          },
+          "score": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          }
+        }
+      },
+      "Answer": {
+        "type": "object",
+        "required": ["questionId", "answer"],
+        "properties": {
+          "questionId": {
+            "type": "string"
+          },
+          "answer": {
+            "type": "string",
+            "enum": ["yes", "no", "partial", "unknown"]
+          },
+          "notes": {
+            "type": "string",
+            "maxLength": 5000
+          }
+        }
+      },
+      "FilterResponse": {
+        "type": "object",
+        "required": ["filteredResults", "metadata"],
+        "properties": {
+          "filteredResults": {
+            "type": "array",
+            "description": "30-50 relevant results about target vendor",
+            "items": {
+              "$ref": "#/components/schemas/FilteredResult"
+            }
+          },
+          "metadata": {
+            "type": "object",
+            "properties": {
+              "totalInput": {
+                "type": "integer",
+                "description": "Number of results processed"
+              },
+              "totalOutput": {
+                "type": "integer",
+                "description": "Number of relevant results found"
+              },
+              "filterRate": {
+                "type": "number",
+                "description": "Percentage kept (totalOutput / totalInput)"
+              },
+              "processingTimeMs": {
+                "type": "integer"
+              }
+            }
+          }
+        }
+      },
+      "FilteredResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/SearchResult"
+          },
+          {
+            "type": "object",
+            "required": ["relevanceScore", "relevanceReasoning", "isAboutTargetVendor"],
+            "properties": {
+              "relevanceScore": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1,
+                "description": "Gemini's confidence score"
+              },
+              "relevanceReasoning": {
+                "type": "string",
+                "description": "Why Gemini considers this relevant"
+              },
+              "isAboutTargetVendor": {
+                "type": "boolean",
+                "description": "True if about specific vendor, false if unrelated project"
+              },
+              "geminiFilteredAt": {
+                "type": "integer",
+                "description": "Unix timestamp"
+              }
+            }
+          }
+        ]
+      },
+      "Error": {
+        "type": "object",
+        "required": ["error"],
+        "properties": {
+          "error": {
+            "type": "string"
+          },
+          "details": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

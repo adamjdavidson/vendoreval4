@@ -1,0 +1,246 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Analyze Category Content API",
+    "version": "1.0.0",
+    "description": "Supabase Edge Function that uses Gemini Flash to analyze article content for evaluation category insights"
+  },
+  "servers": [
+    {
+      "url": "https://leicgzljnodyrdbbcgoq.supabase.co/functions/v1",
+      "description": "Supabase Edge Functions"
+    }
+  ],
+  "paths": {
+    "/analyze-category-content": {
+      "post": {
+        "summary": "Analyze articles for category insights",
+        "description": "Uses Gemini to synthesize insights from full article content for one evaluation category",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AnalyzeRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully analyzed content",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnalyzeResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AnalyzeRequest": {
+        "type": "object",
+        "required": ["vendorName", "categoryKey", "articles", "userAnswers"],
+        "properties": {
+          "vendorName": {
+            "type": "string",
+            "example": "Jasper"
+          },
+          "categoryKey": {
+            "type": "string",
+            "enum": ["see", "change", "use", "adapt", "leave", "learn"]
+          },
+          "articles": {
+            "type": "array",
+            "description": "Full article content for this category",
+            "items": {
+              "$ref": "#/components/schemas/ArticleContent"
+            }
+          },
+          "userAnswers": {
+            "type": "object",
+            "description": "User's answers to questions in this category",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/Answer"
+            }
+          },
+          "categoryQuestions": {
+            "type": "array",
+            "description": "Questions for this category",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "text": {
+                  "type": "string"
+                },
+                "isCritical": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      },
+      "ArticleContent": {
+        "type": "object",
+        "required": ["url", "title", "textContent"],
+        "properties": {
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "title": {
+            "type": "string"
+          },
+          "textContent": {
+            "type": "string"
+          },
+          "publishedDate": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "Answer": {
+        "type": "object",
+        "required": ["questionId", "answer"],
+        "properties": {
+          "questionId": {
+            "type": "string"
+          },
+          "answer": {
+            "type": "string",
+            "enum": ["yes", "no", "partial", "unknown"]
+          },
+          "notes": {
+            "type": "string"
+          }
+        }
+      },
+      "AnalyzeResponse": {
+        "type": "object",
+        "required": ["categoryInsight"],
+        "properties": {
+          "categoryInsight": {
+            "$ref": "#/components/schemas/CategoryInsight"
+          }
+        }
+      },
+      "CategoryInsight": {
+        "type": "object",
+        "required": ["categoryKey", "categoryName", "findings", "keyPoints", "sources", "confidence", "analyzedAt", "articlesAnalyzed"],
+        "properties": {
+          "categoryKey": {
+            "type": "string",
+            "enum": ["see", "change", "use", "adapt", "leave", "learn"]
+          },
+          "categoryName": {
+            "type": "string",
+            "example": "Transparency & Observability"
+          },
+          "findings": {
+            "type": "string",
+            "description": "Multi-paragraph synthesis"
+          },
+          "keyPoints": {
+            "type": "array",
+            "minItems": 3,
+            "maxItems": 5,
+            "items": {
+              "type": "string"
+            }
+          },
+          "sources": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CategorySource"
+            }
+          },
+          "confidence": {
+            "type": "string",
+            "enum": ["high", "medium", "low"]
+          },
+          "contradictions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "additionalConsiderations": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "analyzedAt": {
+            "type": "integer",
+            "description": "Unix timestamp"
+          },
+          "articlesAnalyzed": {
+            "type": "integer"
+          }
+        }
+      },
+      "CategorySource": {
+        "type": "object",
+        "required": ["url", "title", "context"],
+        "properties": {
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "title": {
+            "type": "string"
+          },
+          "relevantQuote": {
+            "type": "string"
+          },
+          "context": {
+            "type": "string",
+            "description": "How this source relates to category"
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "required": ["error"],
+        "properties": {
+          "error": {
+            "type": "string"
+          },
+          "details": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
