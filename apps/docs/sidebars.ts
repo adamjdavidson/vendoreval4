@@ -22,6 +22,7 @@ const sidebars: SidebarsConfig = {
         'framework/why-different',
         'framework/why-diff2',
         'framework/metaphors',
+        'framework/cynical',
       ],
     },
     {
