@@ -20,6 +20,8 @@ const sidebars: SidebarsConfig = {
       items: [
         'framework/index',
         'framework/why-different',
+        'framework/why-diff2',
+        'framework/metaphors',
       ],
     },
     {
